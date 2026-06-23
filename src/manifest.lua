@@ -26,7 +26,7 @@ return function(_require)
 
 	-- ⚠ EDIT FOR YOUR FORK: the loader pins network fetches to <user>/<name>@<ref>.
 	manifest.repo = {
-		user = "YOUR_GH_USERNAME",
+		user = "EcoTopWoods",
 		name = "cinematic-shader",
 		ref = "v1.0.0", -- a TAG or commit SHA — never a moving branch in production
 		srcDir = "src",

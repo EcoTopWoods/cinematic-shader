@@ -2,7 +2,7 @@
 	dist/loader.lua  —  NETWORK LOADER (the only file users paste)
 	=============================================================================
 	    loadstring(game:HttpGet(
-	      "https://raw.githubusercontent.com/YOUR_GH_USERNAME/cinematic-shader/v1.0.0/dist/loader.lua"
+	      "https://raw.githubusercontent.com/EcoTopWoods/cinematic-shader/v1.0.0/dist/loader.lua"
 	    ))()
 	=============================================================================
 	Pinned to a TAG (never a moving branch). Fetches manifest.lua, then implements a
@@ -18,7 +18,7 @@
 ]]
 
 -- ⚠ EDIT THESE for your fork (must match manifest.repo).
-local USER = "YOUR_GH_USERNAME"
+local USER = "EcoTopWoods"
 local REPO = "cinematic-shader"
 local REF  = "v1.0.0"          -- a TAG or commit SHA
 local SRC  = "src"

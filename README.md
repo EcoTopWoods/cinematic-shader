@@ -18,10 +18,10 @@ config and a searchable [Rayfield](https://docs.sirius.menu/rayfield) UI.
 Paste this one line into your executor (pinned to a release tag):
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/YOUR_GH_USERNAME/cinematic-shader/v1.0.0/dist/loader.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EcoTopWoods/cinematic-shader/v1.0.0/dist/loader.lua"))()
 ```
 
-> Replace `YOUR_GH_USERNAME` and the `v1.0.0` tag with your fork/release. The
+> Replace `EcoTopWoods` and the `v1.0.0` tag with your fork/release. The
 > loader fetches the manifest, warm-fetches every module in parallel, and boots —
 > with retries, **CDN mirror fallback** (raw.githubusercontent → jsDelivr →
 > Statically) and an optional disk cache. If anything fails to load it aborts
@@ -30,7 +30,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/YOUR_GH_USERNAME/cine
 Prefer a single self-contained file (offline / deterministic)? Use the bundle:
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/YOUR_GH_USERNAME/cinematic-shader/v1.0.0/dist/cinematic.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EcoTopWoods/cinematic-shader/v1.0.0/dist/cinematic.lua"))()
 ```
 
 Press **Right Shift** (configurable) to toggle the control panel.
