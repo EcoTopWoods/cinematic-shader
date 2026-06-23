@@ -1,0 +1,57 @@
+name: build-and-release
+
+# Regenerates dist/cinematic.lua from src/ via the bundler, verifies the loader,
+# and (on a version tag) publishes a GitHub Release with the dist artifacts.
+
+on:
+  push:
+    branches: [main]
+    paths: ["src/**", "build/**", "dist/loader.lua"]
+    tags: ["v*"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lua
+        uses: leafo/gh-actions-lua@v10
+        with:
+          luaVersion: "5.4"
+
+      - name: Build the single-file bundle
+        run: lua build/bundle.lua
+
+      - name: Sanity-check outputs
+        run: |
+          test -s dist/cinematic.lua || { echo "bundle missing/empty"; exit 1; }
+          test -s dist/loader.lua    || { echo "loader missing/empty"; exit 1; }
+          grep -q 'return __require("init")' dist/cinematic.lua || { echo "bundle entrypoint missing"; exit 1; }
+          echo "dist/cinematic.lua: $(wc -l < dist/cinematic.lua) lines"
+
+      - name: Commit regenerated bundle (main only)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- dist/cinematic.lua dist/loader.lua; then
+            git add dist/cinematic.lua dist/loader.lua
+            git commit -m "ci: regenerate dist bundle"
+            git push
+          else
+            echo "dist already up to date"
+          fi
+
+      - name: Publish release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/cinematic.lua
+            dist/loader.lua
+          generate_release_notes: true

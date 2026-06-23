@@ -1,0 +1,19 @@
+{
+	"name": "cinematic-shader",
+	"globIgnorePaths": ["**/*.md"],
+	"tree": {
+		"$className": "DataModel",
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"CinematicShader": {
+				"$path": "src"
+			}
+		},
+		"StarterPlayer": {
+			"$className": "StarterPlayer",
+			"StarterPlayerScripts": {
+				"$className": "StarterPlayerScripts"
+			}
+		}
+	}
+}

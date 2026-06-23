@@ -1,0 +1,15 @@
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / Studio
+.vscode/
+*.rbxl
+*.rbxlx
+*.rbxl.lock
+*.rbxlx.lock
+
+# Scratch
+_*.py
+*.tmp
