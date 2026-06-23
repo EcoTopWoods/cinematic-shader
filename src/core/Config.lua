@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.1"
+	Config.version = "1.0.2"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -94,12 +94,12 @@ return function(_require)
 			tab = "Lighting", group = "Core", requires = "futureLighting", save = true,
 		},
 		lighting_brightness = {
-			default = 1.9, type = "number", min = 0, max = 6, step = 0.05,
+			default = 1.6, type = "number", min = 0, max = 6, step = 0.05,
 			label = "Sun Brightness", desc = "Lighting.Brightness — primary light intensity.",
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_exposure = {
-			default = -0.1, type = "number", min = -3, max = 3, step = 0.05,
+			default = -0.15, type = "number", min = -3, max = 3, step = 0.05,
 			label = "Exposure Comp.", desc = "Lighting.ExposureCompensation — overall EV. (NOT 'Exposure', that property does not exist.)",
 			tab = "Lighting", group = "Core", save = true,
 		},
@@ -123,17 +123,17 @@ return function(_require)
 			tab = "Lighting", group = "Core", requires = "shadowSoftness", save = true,
 		},
 		lighting_ambient = {
-			default = Color3.fromRGB(28, 30, 38), type = "color",
+			default = Color3.fromRGB(26, 24, 24), type = "color",
 			label = "Ambient", desc = "Lighting.Ambient — shadow fill colour.",
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_outdoor_ambient = {
-			default = Color3.fromRGB(96, 104, 124), type = "color",
+			default = Color3.fromRGB(108, 104, 104), type = "color",
 			label = "Outdoor Ambient", desc = "Lighting.OutdoorAmbient — skylight fill.",
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_env_diffuse = {
-			default = 1.0, type = "number", min = 0, max = 2, step = 0.05,
+			default = 0.9, type = "number", min = 0, max = 2, step = 0.05,
 			label = "Env. Diffuse (GI feel)", desc = "Lighting.EnvironmentDiffuseScale — fakes bounced diffuse GI.",
 			tab = "Lighting", group = "Core", save = true,
 		},
@@ -148,7 +148,7 @@ return function(_require)
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_color_shift_bottom = {
-			default = Color3.fromRGB(120, 140, 170), type = "color",
+			default = Color3.fromRGB(150, 146, 150), type = "color",
 			label = "Color Shift Bottom", desc = "Lighting.ColorShift_Bottom — cool bounce tint.",
 			tab = "Lighting", group = "Core", save = true,
 		},
@@ -187,7 +187,7 @@ return function(_require)
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},
 		eye_adapt_target = {
-			default = 0.5, type = "number", min = 0.05, max = 0.9, step = 0.01,
+			default = 0.45, type = "number", min = 0.05, max = 0.9, step = 0.01,
 			label = "Target Luminance", desc = "Mid-grey target the auto-exposure drives toward.",
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},
@@ -283,7 +283,7 @@ return function(_require)
 			tab = "Reflections", group = "Floors", save = true,
 		},
 		reflect_glass_overlay = {
-			default = true, type = "boolean", label = "Glass Gloss Overlay",
+			default = false, type = "boolean", label = "Glass Gloss Overlay",
 			desc = "Adds a thin Glass-material overlay on flagged floors for SSR/refraction under Future.",
 			tab = "Reflections", group = "Floors", requires = "futureLighting", save = true,
 		},
@@ -309,7 +309,7 @@ return function(_require)
 			tab = "Reflections", group = "Probes (SSR approximation)", save = true,
 		},
 		reflect_smoothing = {
-			default = 0.85, type = "number", min = 0, max = 0.98, step = 0.01,
+			default = 0.9, type = "number", min = 0, max = 0.98, step = 0.01,
 			label = "Temporal Smoothing", desc = "Exponential blend that kills shimmer between frames.",
 			tab = "Reflections", group = "Probes (SSR approximation)", save = true,
 		},
@@ -327,6 +327,11 @@ return function(_require)
 			default = 128, type = "number", min = 64, max = 256, step = 32,
 			label = "Probe Buffer Size", desc = "EditableImage buffer resolution (px). Kept small — CPU bound.",
 			tab = "Reflections", group = "Probes (SSR approximation)", requires = "editableImage", save = true,
+		},
+		reflect_mirror = {
+			default = false, type = "boolean", label = "Hero Floor Mirror (heavy)",
+			desc = "Optional ViewportFrame planar mirror on one hero floor. EXPENSIVE — re-renders a cloned subset of the scene. OFF by default; only enable on a strong PC. Was an auto-on stutter source in busy places.",
+			tab = "Reflections", group = "Probes (SSR approximation)", save = true,
 		},
 
 		-- ════════════════════════ ATMOSPHERE ═══════════════════════════════
@@ -346,7 +351,7 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
 		atmos_color = {
-			default = Color3.fromRGB(199, 209, 224), type = "color",
+			default = Color3.fromRGB(212, 210, 212), type = "color",
 			label = "Atmosphere Color", desc = "Atmosphere.Color.",
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
@@ -573,7 +578,7 @@ return function(_require)
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},
 		overlay_grain_intensity = {
-			default = 0.1, type = "number", min = 0, max = 1, step = 0.02,
+			default = 0.06, type = "number", min = 0, max = 1, step = 0.02,
 			label = "Grain Intensity", desc = "Grain overlay opacity.",
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},
@@ -684,7 +689,7 @@ return function(_require)
 			"reflect_glass_overlay", "reflect_floor_tag" } },
 		{ tab = "Reflections", group = "Probes (SSR approximation)", keys = {
 			"reflect_mode", "reflect_rays_per_frame", "reflect_accum_frames", "reflect_smoothing",
-			"reflect_reproject", "reflect_multibounce", "reflect_resolution" } },
+			"reflect_reproject", "reflect_multibounce", "reflect_resolution", "reflect_mirror" } },
 
 		{ tab = "Atmosphere & Weather", group = "Atmosphere", keys = {
 			"atmos_enabled", "atmos_density", "atmos_offset", "atmos_color", "atmos_decay",

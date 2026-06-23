@@ -62,34 +62,41 @@ return function(require)
 		vpf.CurrentCamera = vpCam
 
 		local cloneHolder = {}
+		-- Cheap spatial query instead of workspace:GetDescendants() — the old code
+		-- walked the ENTIRE instance tree on every refresh, a hard periodic hitch on
+		-- big places. GetPartBoundsInBox returns only nearby BaseParts, capped.
+		local overlap = OverlapParams.new()
+		overlap.FilterType = Enum.RaycastFilterType.Exclude
+		overlap.FilterDescendantsInstances = { ctx.worldFolder }
+		overlap.MaxParts = CLONE_CAP * 3
 
 		local function rebuildClones()
 			for _, c in ipairs(cloneHolder) do c:Destroy() end
 			table.clear(cloneHolder)
 			local origin = heroFloor.Position
+			local box = Vector3.new(CLONE_RADIUS * 2, CLONE_RADIUS * 2, CLONE_RADIUS * 2)
+			local nearby = workspace:GetPartBoundsInBox(CFrame.new(origin), box, overlap)
 			local n = 0
-			for _, part in ipairs(workspace:GetDescendants()) do
+			for _, part in ipairs(nearby) do
 				if n >= CLONE_CAP then break end
-				if part:IsA("BasePart") and part.Anchored and part ~= heroFloor then
-					if (part.Position - origin).Magnitude <= CLONE_RADIUS then
-						local ok, clone = pcall(function()
-							local cl = part:Clone()
-							cl.Anchored = true
-							for _, ch in ipairs(cl:GetChildren()) do
-								-- drop scripts/sounds/heavy children from clones
-								if not ch:IsA("DataModelMesh") and not ch:IsA("SpecialMesh")
-									and not ch:IsA("Decal") and not ch:IsA("Texture")
-									and not ch:IsA("SurfaceAppearance") then
-									ch:Destroy()
-								end
+				if part.Anchored and part ~= heroFloor then
+					local ok, clone = pcall(function()
+						local cl = part:Clone()
+						cl.Anchored = true
+						for _, ch in ipairs(cl:GetChildren()) do
+							-- drop scripts/sounds/heavy children from clones
+							if not ch:IsA("DataModelMesh") and not ch:IsA("SpecialMesh")
+								and not ch:IsA("Decal") and not ch:IsA("Texture")
+								and not ch:IsA("SurfaceAppearance") then
+								ch:Destroy()
 							end
-							cl.Parent = world
-							return cl
-						end)
-						if ok and clone then
-							cloneHolder[#cloneHolder + 1] = clone
-							n += 1
 						end
+						cl.Parent = world
+						return cl
+					end)
+					if ok and clone then
+						cloneHolder[#cloneHolder + 1] = clone
+						n += 1
 					end
 				end
 			end

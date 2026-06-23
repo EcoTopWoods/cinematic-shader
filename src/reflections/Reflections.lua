@@ -127,9 +127,12 @@ return function(require)
 			return Util.clamp(base + fromWeather, 0, 1)
 		end
 
-		local function updateFloor(entry, camLook)
+		local function updateFloor(entry, camLook, camPos)
 			local part = entry.part
 			if not part.Parent then return false end
+			-- Ceilings/overpasses also have up-facing tops; never glaze a surface that
+			-- sits well ABOVE the eye (that produced "gray planes above me").
+			local aboveEye = camPos and (part.Position.Y > camPos.Y + 4)
 			local cls = Scanner.classify(part)
 			local f0 = (cls and cls.f0) or 0.04
 			local up = part.CFrame.UpVector
@@ -144,7 +147,7 @@ return function(require)
 			Snapshot.set(part, "Reflectance", target * Util.lerp(0.7, 1, Reflections._q or 1))
 
 			-- glass sheen overlay (lazy-created, capped) gets the probe colour
-			if State.get("reflect_glass_overlay") and caps.futureLighting and not entry.overlay then
+			if State.get("reflect_glass_overlay") and caps.futureLighting and not entry.overlay and not aboveEye then
 				makeOverlay(entry)
 			end
 			if entry.overlay then
@@ -180,7 +183,7 @@ return function(require)
 					-- compact lazily: skip dead refs (cleaned by unenroll over time)
 				else
 					if (part.Position - camPos).Magnitude <= FLOOR_RADIUS then
-						updateFloor(entry, camLook)
+						updateFloor(entry, camLook, camPos)
 						processed += 1
 					end
 				end
@@ -202,17 +205,24 @@ return function(require)
 
 		switchStrategy()
 
-		-- Optional hero-floor viewport mirror: highest tier only (desktop + high
-		-- quality). Self-contained; its child Maid is owned by root for teardown.
-		if not ctx.platform.isMobile and ctx.getQuality() > 0.85 and State.get("reflect_enabled") then
-			maid:spawn(function()
-				task.wait(1) -- let the Scanner populate floors first
-				local ok, mirror = pcall(function()
-					return require("reflections/ViewportMirror").start(ctx)
+		-- Optional hero-floor viewport mirror — OFF by default and NEVER auto-enabled.
+		-- It re-renders a cloned scene subset and was a periodic stutter source, so it
+		-- is opt-in via the reflect_mirror toggle only (desktop only).
+		local mirrorHandle = nil
+		local function syncMirror()
+			local want = State.get("reflect_mirror") and not ctx.platform.isMobile and State.get("reflect_enabled")
+			if want and not mirrorHandle then
+				maid:spawn(function()
+					task.wait(0.5) -- let the Scanner populate floors first
+					local ok, m = pcall(function() return require("reflections/ViewportMirror").start(ctx) end)
+					if ok and m then mirrorHandle = m; ctx.registerHandle(m) end
 				end)
-				if ok and mirror then ctx.registerHandle(mirror) end
-			end)
+			elseif not want and mirrorHandle then
+				pcall(function() if mirrorHandle.stop then mirrorHandle.stop() end end)
+				mirrorHandle = nil
+			end
 		end
+		maid:give(State.observe("reflect_mirror", syncMirror))
 
 		ctx.log.debug("Reflections online; floors seeded =", #order)
 		return Reflections

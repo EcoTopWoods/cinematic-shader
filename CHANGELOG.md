@@ -4,6 +4,33 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.2] — 2026-06-23
+
+Stability + look pass. Kills the periodic freeze, the gray planes, and the blue cast.
+
+### Fixed
+- **Periodic freeze during play** (sharp moves / spawns) was the hero-floor
+  **ViewportMirror**: it auto-enabled on Ultra and ran `workspace:GetDescendants()`
+  + up to 40 `:Clone()` calls every 3 s — a guaranteed hitch on big places. It is
+  now **off by default** (opt-in `reflect_mirror` toggle) and, when enabled, uses a
+  cheap `GetPartBoundsInBox` region query instead of walking the whole tree.
+- **"Gray shadow-like things above me"** were the Glass *sheen overlay* planes:
+  large up-facing parts (ceilings, overpasses) were classified as floors and got a
+  translucent gray plane stuck on top. Glass overlays are now **off by default**, and
+  even when on they are never created on a surface above eye level.
+- **Blue tint** on bright/bloomed areas: neutralised the cool defaults —
+  Ambient, OutdoorAmbient, ColorShift_Bottom and Atmosphere colour are now neutral.
+- **Over-brightened lighting**: Brightness 1.9→1.6, Exposure −0.1→−0.15, GI feel
+  0.9. Grain dropped to 0.06 and reflection temporal smoothing raised to 0.9 to
+  reduce per-pixel shimmer.
+
+### Added
+- **Night City** preset — GTA-style developed-night look: deep contrast, controlled
+  exposure, warm sodium key vs cool city bounce (a tasteful teal-orange split, not a
+  flat blue wash), neon/streetlights that bloom while the rest stays grounded, wet
+  reflective streets, stars. Apply from the Presets tab.
+- **Hero Floor Mirror** toggle (Reflections tab) — the opt-in for the heavy mirror.
+
 ## [1.0.1] — 2026-06-23
 
 Tuning + reliability pass after first in-game testing. The default look now
