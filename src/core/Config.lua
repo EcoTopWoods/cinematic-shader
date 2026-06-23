@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.0"
+	Config.version = "1.0.1"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -94,12 +94,12 @@ return function(_require)
 			tab = "Lighting", group = "Core", requires = "futureLighting", save = true,
 		},
 		lighting_brightness = {
-			default = 2.2, type = "number", min = 0, max = 6, step = 0.05,
+			default = 1.9, type = "number", min = 0, max = 6, step = 0.05,
 			label = "Sun Brightness", desc = "Lighting.Brightness — primary light intensity.",
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_exposure = {
-			default = 0.15, type = "number", min = -3, max = 3, step = 0.05,
+			default = -0.1, type = "number", min = -3, max = 3, step = 0.05,
 			label = "Exposure Comp.", desc = "Lighting.ExposureCompensation — overall EV. (NOT 'Exposure', that property does not exist.)",
 			tab = "Lighting", group = "Core", save = true,
 		},
@@ -165,7 +165,7 @@ return function(_require)
 			tab = "Lighting", group = "Tonemap (filmic, approx.)", save = true,
 		},
 		tonemap_contrast = {
-			default = 0.18, type = "number", min = -0.5, max = 1, step = 0.01,
+			default = 0.14, type = "number", min = -0.5, max = 1, step = 0.01,
 			label = "Filmic Contrast", desc = "Toe/shoulder contrast of the tonemap CCE.",
 			tab = "Lighting", group = "Tonemap (filmic, approx.)", save = true,
 		},
@@ -187,12 +187,12 @@ return function(_require)
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},
 		eye_adapt_target = {
-			default = 0.38, type = "number", min = 0.05, max = 0.9, step = 0.01,
+			default = 0.5, type = "number", min = 0.05, max = 0.9, step = 0.01,
 			label = "Target Luminance", desc = "Mid-grey target the auto-exposure drives toward.",
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},
 		eye_adapt_speed = {
-			default = 1.6, type = "number", min = 0.1, max = 6, step = 0.1,
+			default = 1.2, type = "number", min = 0.1, max = 6, step = 0.1,
 			label = "Adaptation Time (tau)", desc = "Seconds of exponential lag. Larger = slower, more cinematic.",
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},
@@ -202,7 +202,7 @@ return function(_require)
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},
 		eye_adapt_max = {
-			default = 1.2, type = "number", min = 0, max = 3, step = 0.05,
+			default = 0.5, type = "number", min = 0, max = 3, step = 0.05,
 			label = "Max Exposure", desc = "Upper clamp on auto exposure (dark scenes).",
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},
@@ -214,7 +214,7 @@ return function(_require)
 			tab = "Lighting", group = "Bloom", save = true,
 		},
 		bloom_intensity = {
-			default = 1.1, type = "number", min = 0, max = 4, step = 0.05,
+			default = 0.5, type = "number", min = 0, max = 4, step = 0.05,
 			label = "Bloom Intensity", desc = "BloomEffect.Intensity.",
 			tab = "Lighting", group = "Bloom", save = true,
 		},
@@ -224,12 +224,12 @@ return function(_require)
 			tab = "Lighting", group = "Bloom", save = true,
 		},
 		bloom_threshold = {
-			default = 0.9, type = "number", min = 0, max = 5, step = 0.05,
+			default = 1.1, type = "number", min = 0, max = 5, step = 0.05,
 			label = "Bloom Threshold", desc = "Base threshold; eye-adaptation offsets this live.",
 			tab = "Lighting", group = "Bloom", save = true,
 		},
 		bloom_exposure_couple = {
-			default = 0.6, type = "number", min = 0, max = 1.5, step = 0.05,
+			default = 0.2, type = "number", min = 0, max = 1.5, step = 0.05,
 			label = "Exposure Coupling", desc = "How strongly auto-exposure modulates the bloom threshold.",
 			tab = "Lighting", group = "Bloom", save = true,
 		},
@@ -336,7 +336,7 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
 		atmos_density = {
-			default = 0.34, type = "number", min = 0, max = 1, step = 0.01,
+			default = 0.18, type = "number", min = 0, max = 1, step = 0.01,
 			label = "Density", desc = "Atmosphere.Density — distance haze thickness.",
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
@@ -356,12 +356,12 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
 		atmos_glare = {
-			default = 0.35, type = "number", min = 0, max = 10, step = 0.05,
+			default = 0.04, type = "number", min = 0, max = 10, step = 0.05,
 			label = "Glare", desc = "Atmosphere.Glare — sun glare bloom.",
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
 		atmos_haze = {
-			default = 1.8, type = "number", min = 0, max = 10, step = 0.1,
+			default = 0.5, type = "number", min = 0, max = 10, step = 0.1,
 			label = "Haze", desc = "Atmosphere.Haze.",
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
@@ -500,7 +500,7 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
 		},
 		enh_godray_strength = {
-			default = 0.5, type = "number", min = 0, max = 1, step = 0.05,
+			default = 0.3, type = "number", min = 0, max = 1, step = 0.05,
 			label = "God Ray Strength", desc = "Beam transparency/scale for light shafts.",
 			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
 		},
@@ -563,7 +563,7 @@ return function(_require)
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},
 		overlay_vignette_intensity = {
-			default = 0.45, type = "number", min = 0, max = 1, step = 0.05,
+			default = 0.32, type = "number", min = 0, max = 1, step = 0.05,
 			label = "Vignette Intensity", desc = "Overlay opacity.",
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},
@@ -573,17 +573,17 @@ return function(_require)
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},
 		overlay_grain_intensity = {
-			default = 0.18, type = "number", min = 0, max = 1, step = 0.02,
+			default = 0.1, type = "number", min = 0, max = 1, step = 0.02,
 			label = "Grain Intensity", desc = "Grain overlay opacity.",
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},
 		overlay_chromatic = {
-			default = true, type = "boolean", label = "Chromatic Aberration (overlay)",
+			default = false, type = "boolean", label = "Chromatic Aberration (overlay)",
 			desc = "Edge RGB-split via offset coloured ImageLabels — faked.",
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},
 		overlay_chromatic_intensity = {
-			default = 0.25, type = "number", min = 0, max = 1, step = 0.05,
+			default = 0.14, type = "number", min = 0, max = 1, step = 0.05,
 			label = "Chromatic Amount", desc = "Edge split strength.",
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},

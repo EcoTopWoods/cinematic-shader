@@ -40,33 +40,39 @@ return function(require)
 
 		-- seed exposure from the static config so we don't pop on first frame
 		ctx.bus.exposure = State.get("lighting_exposure")
-		local lum = 0.4
+		local lum = 0.5
 
 		local function skyLuminance()
 			-- day factor from ClockTime: ~1 at noon, ~0 deep night.
 			local h = State.get("lighting_clock_time")
 			local day = math.clamp(math.sin((h - 6) / 12 * math.pi), 0, 1)
-			return 0.08 + day * 0.72
+			return 0.10 + day * 0.78
 		end
 
+		-- A representative spread of rays approximating "what fills the frame":
+		-- forward, four spread, two slightly-up (catch bright sky/windows), one down.
+		-- Sky misses count at full sky brightness so looking at a bright sky correctly
+		-- READS as bright (→ exposure pulls DOWN, preventing the white-out you'd get
+		-- otherwise). This is the auto-adapt that keeps any game from blowing out.
+		local FAN = {
+			{ 0, 0 }, { 22, 6 }, { -22, 6 }, { 12, -8 }, { -12, -8 },
+			{ 40, 14 }, { -40, 14 }, { 0, -28 },
+		}
 		local function sampleLuminance(cam)
 			local cf = cam.CFrame
 			local sky = skyLuminance()
 			local total, n = 0, 0
-			-- 1 forward + 2 spread + 1 down: cheap, fixed
-			local dirs = {
-				cf.LookVector,
-				(cf * CFrame.Angles(0, math.rad(20), 0)).LookVector,
-				(cf * CFrame.Angles(0, math.rad(-20), 0)).LookVector,
-				Vector3.new(0, -1, 0),
-			}
-			for _, d in ipairs(dirs) do
-				local r = workspace:Raycast(cf.Position, d * 120, params)
+			for _, a in ipairs(FAN) do
+				local dir = (cf * CFrame.Angles(math.rad(a[2]), math.rad(a[1]), 0)).LookVector
+				local r = workspace:Raycast(cf.Position, dir * 160, params)
 				if r then
 					local ok, c = pcall(function() return r.Instance.Color end)
-					total += (ok and typeof(c) == "Color3") and Util.luminance(c) * sky or sky * 0.3
+					-- surface luminance lit by the current sky term; clamp so neon/white
+					-- parts don't dominate the meter.
+					local sl = (ok and typeof(c) == "Color3") and Util.luminance(c) or 0.5
+					total += math.min(1, sl * (0.35 + 0.65 * sky))
 				else
-					total += sky -- saw the sky
+					total += sky -- the ray saw open sky → full sky brightness
 				end
 				n += 1
 			end
@@ -83,14 +89,18 @@ return function(require)
 			local cam = ctx.camera()
 			if not cam then return end
 			sampleAccum += dt
-			if sampleAccum >= 0.1 then
+			if sampleAccum >= 0.12 then
 				sampleAccum = 0
 				lum = sampleLuminance(cam)
 				ctx.bus.sceneLuminance = lum
 			end
-			-- darker than target → raise exposure; brighter → lower it
+			-- Gentle proportional response around the static exposure baseline: a scene
+			-- already near target leaves exposure ≈ lighting_exposure (we ENHANCE, we
+			-- don't fight a well-lit game); brighter → pull down, darker → lift modestly.
+			-- gain 1.4 + the tightened [min,max] clamp prevents runaway over-exposure.
 			local err = State.get("eye_adapt_target") - lum
-			local target = Util.clamp(err * 2.5, State.get("eye_adapt_min"), State.get("eye_adapt_max"))
+			local base = State.get("lighting_exposure")
+			local target = Util.clamp(base + err * 1.4, State.get("eye_adapt_min"), State.get("eye_adapt_max"))
 			ctx.bus.exposure = Util.damp(ctx.bus.exposure, target, State.get("eye_adapt_speed"), dt)
 		end))
 

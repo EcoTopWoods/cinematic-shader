@@ -15,20 +15,45 @@ return function(require)
 	Presets._current = "Cinematic"
 
 	-- ordered list for the UI dropdown
-	Presets._order = { "Cinematic", "Realistic", "Vibrant", "Dreamy", "Noir", "Horror", "Potato" }
+	Presets._order = { "Ultra", "Cinematic", "Realistic", "Vibrant", "Dreamy", "Noir", "Horror", "Potato" }
 
 	Presets._data = {
+		-- The "best quality" / extreme preset: rich but DELIBERATELY not blown out —
+		-- neutral-ish exposure, restrained bloom, real SunRaysEffect god-rays, the full
+		-- raycast reflection probe, soft shadows, shallow DoF. Heavy on a strong PC.
+		Ultra = {
+			quality = 1.0,
+			tonemap_enabled = true, tonemap_mode = "ACES", tonemap_contrast = 0.15,
+			lighting_future = true, lighting_brightness = 2.0, lighting_exposure = -0.05,
+			lighting_env_diffuse = 1.1, lighting_env_specular = 1.35, lighting_shadow_softness = 0.5,
+			eye_adapt_enabled = true, eye_adapt_target = 0.5, eye_adapt_speed = 1.1,
+			grade_enabled = true, grade_contrast = 0.1, grade_saturation = 0.15,
+			grade_tint = Color3.fromRGB(255, 247, 236),
+			bloom_enabled = true, bloom_intensity = 0.55, bloom_size = 30, bloom_threshold = 1.05,
+			atmos_enabled = true, atmos_density = 0.2, atmos_haze = 0.6, atmos_glare = 0.05,
+			clouds_enabled = true, clouds_density = 0.65,
+			reflect_enabled = true, reflect_mode = "Raycast Probe (SSR approx.)",
+			reflect_strength = 0.6, reflect_fresnel = 0.85, reflect_wetness = 0.4,
+			reflect_rays_per_frame = 96, reflect_accum_frames = 10, reflect_glass_overlay = true,
+			cam_dof_enabled = true, cam_dof_aperture = 22,
+			enh_enabled = true, enh_godrays = true, enh_godray_strength = 0.3, enh_dust = true,
+			overlay_vignette = true, overlay_vignette_intensity = 0.3,
+			overlay_grain = true, overlay_grain_intensity = 0.08,
+			overlay_chromatic = true, overlay_chromatic_intensity = 0.14,
+		},
 		Cinematic = {
-			tonemap_enabled = true, tonemap_mode = "ACES", tonemap_contrast = 0.18,
-			lighting_exposure = 0.15, lighting_brightness = 2.2,
+			tonemap_enabled = true, tonemap_mode = "ACES", tonemap_contrast = 0.15,
+			lighting_exposure = -0.05, lighting_brightness = 1.9,
+			eye_adapt_enabled = true, eye_adapt_target = 0.5,
 			grade_enabled = true, grade_contrast = 0.09, grade_saturation = 0.12,
 			grade_tint = Color3.fromRGB(255, 246, 232),
-			bloom_enabled = true, bloom_intensity = 1.2, bloom_size = 24,
-			atmos_enabled = true, atmos_density = 0.34,
-			overlay_vignette = true, overlay_vignette_intensity = 0.45,
-			overlay_grain = true, overlay_grain_intensity = 0.16,
+			bloom_enabled = true, bloom_intensity = 0.55, bloom_size = 28, bloom_threshold = 1.05,
+			atmos_enabled = true, atmos_density = 0.2, atmos_haze = 0.6, atmos_glare = 0.05,
+			overlay_vignette = true, overlay_vignette_intensity = 0.32,
+			overlay_grain = true, overlay_grain_intensity = 0.09,
 			cam_dof_enabled = true, cam_dof_aperture = 18,
 			reflect_enabled = true, reflect_strength = 0.55,
+			enh_godrays = true, enh_godray_strength = 0.3,
 		},
 		Realistic = {
 			tonemap_enabled = true, tonemap_mode = "Neutral", tonemap_contrast = 0.1,

@@ -4,6 +4,37 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] — 2026-06-23
+
+Tuning + reliability pass after first in-game testing. The default look now
+*enhances* a scene instead of blowing it out, and auto-adapts to any game.
+
+### Fixed
+- **Network loader was unreliable** — it fetched all ~64 source modules in a
+  parallel burst, tripping `raw.githubusercontent.com` rate limiting and aborting.
+  It now fetches the single pre-built `dist/cinematic.lua` bundle in **one request**
+  (mirrors + retries + disk cache retained). One request ≫ sixty-four.
+- **God-rays were blocky white slabs** parked in front of the camera regardless of
+  sun position. Replaced with the engine's real `SunRaysEffect`, driven by actual
+  sun on-screen visibility (`camLook · sunDirection`) — rays now emanate from the
+  sun and fade as it leaves view. A whisper-thin accent beam appears only when you
+  look almost straight into the sun.
+- **Blown-out / washed-out default grade.** Calmed the defaults so the suite grades
+  rather than overexposes: brightness 2.2→1.9, exposure 0.15→−0.1, bloom 1.1→0.5
+  (threshold 0.9→1.1), atmosphere haze 1.8→0.5, glare 0.35→0.04. Chromatic aberration
+  now **off** by default (it read as the "fake AI cinematic" tell).
+
+### Changed
+- **Eye-adaptation reworked** into a proper auto-adapt: meters a representative fan
+  of view rays (sky misses count as full brightness) and eases exposure around the
+  static baseline with a tightened clamp — settles near-neutral on a well-lit game,
+  genuinely darkens bright scenes, lifts dark ones. No more runaway over-exposure.
+- **New `Ultra` preset** (best-quality / extreme): full raycast reflection probe,
+  soft shadows, shallow DoF, rich-but-restrained grade — deliberately not blown out.
+  Retuned `Cinematic` to match the calmer baseline.
+- Config save-slot epoch bumped so a retuned release starts from fresh defaults
+  instead of reloading your old saved (blown-out) values.
+
 ## [1.0.0] — 2026-06-23
 
 Initial public release.
