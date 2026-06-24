@@ -89,7 +89,7 @@ return function(require)
 					-- save-slot is suffixed with a tuning epoch: bumping it makes a
 					-- retuned release start from fresh defaults instead of reloading a
 					-- user's old (e.g. blown-out) saved values.
-					FileName = "settings_t4_" .. tostring(placeId),
+					FileName = "settings_t5_" .. tostring(placeId),
 				},
 				Discord = { Enabled = false },
 				KeySystem = false,

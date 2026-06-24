@@ -120,6 +120,27 @@ return function(require)
 			if ok and handle then ctx.registerHandle(handle) else log.error("lighting sub failed:", name, handle) end
 		end
 
+		-- One-time hint. Shadow + reflection RESOLUTION is the client's Graphics
+		-- Quality slider — we physically cannot force it from a script. If it's on
+		-- Automatic or low, the crispest shadows aren't possible no matter the tuning,
+		-- so we nudge the user to set Manual / Quality 10.
+		maid:spawn(function()
+			task.wait(3)
+			local ok, ugs = pcall(function() return UserSettings():GetService("UserGameSettings") end)
+			if not ok or not ugs then return end
+			local saved = ugs.SavedQualityLevel
+			local lvl = (typeof(saved) == "EnumItem" and saved.Value) or tonumber(saved) or 0
+			if lvl == 0 or (lvl > 0 and lvl < 8) then
+				pcall(function()
+					ctx.services.StarterGui:SetCore("SendNotification", {
+						Title = "Cinematic Suite",
+						Text = "For 1080p-crisp shadows & reflections: Roblox menu → Settings → Graphics Mode = Manual, Quality 10.",
+						Duration = 9,
+					})
+				end)
+			end
+		end)
+
 		log.debug("Lighting online (future=" .. tostring(State.get("lighting_future") and caps.futureLighting) .. ")")
 		return Lighting
 	end

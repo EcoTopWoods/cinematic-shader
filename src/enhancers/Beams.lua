@@ -1,20 +1,19 @@
 --!nonstrict
 --[[
-	enhancers/Beams.lua  —  god-rays (sun shafts)
+	enhancers/Beams.lua  —  sun god-rays
 	-----------------------------------------------------------------------------
-	Roblox has no programmable volumetric scattering, BUT it ships a real, good-
-	looking screen-space sun-ray effect: SunRaysEffect. It scatters rays from the
-	ACTUAL sun's on-screen position and naturally fades as the sun leaves view —
-	exactly what god-rays should do.
+	Roblox ships a real, sun-anchored screen-space scattering effect: SunRaysEffect.
+	It emanates from the ACTUAL sun's on-screen position and fades as the sun leaves
+	view — which is exactly right and, crucially, it does NOT track the camera.
 
-	An earlier version parked wide glowing Beam slabs in front of the camera; those
-	read as blocky white shafts regardless of where the sun was. We deleted that and
-	now drive SunRaysEffect (owned by postfx/Pipeline, published on bus.pipeline.sunrays)
-	from real geometry: enh_godray_strength × how directly the camera faces the sun ×
-	daytime. A whisper-thin pair of FaceCamera Beams is added ONLY when you look almost
-	straight at the sun, as a soft accent — never wide, never opaque.
+	An earlier version ALSO added camera-facing Beam "accent shafts" in front of the
+	camera. Those read as a gray wedge that followed the view with eerie precision
+	(FaceCamera + camera-relative placement). Deleted — they were the artifact. We now
+	drive ONLY the engine SunRaysEffect, kept deliberately subtle, gated by how directly
+	the camera faces the sun and by daytime.
 
-	Honest framing: this is screen-space sun scattering, not true volumetrics.
+	Honest framing: screen-space sun scattering, not true volumetrics. (Per-streetlight
+	volumetric cones live in enhancers/Lights.lua, a separate feature.)
 ]]
 
 return function(require)
@@ -24,80 +23,39 @@ return function(require)
 	local Beams = {}
 	Beams.id = "enhancers/Beams"
 
-	-- cached, very faint accent-beam transparency (built ONCE).
-	local ACCENT_TRANSP = NumberSequence.new({
-		NumberSequenceKeypoint.new(0, 1),
-		NumberSequenceKeypoint.new(0.5, 0.9),
-		NumberSequenceKeypoint.new(1, 1),
-	})
-
 	function Beams.start(ctx)
 		local maid = ctx.maid:childMaid()
 		Beams._maid = maid
-		local Snapshot = ctx.snapshot
 		local L = ctx.services.Lighting
+		local Snapshot = ctx.snapshot
 		Beams._q = ctx.getQuality()
-
-		-- two thin accent shafts on a camera-following rig (subtle, sun-gated).
-		local rig = Snapshot.create("Part", {
-			Name = "GodRayRig", Anchored = true, CanCollide = false,
-			CanQuery = false, CanTouch = false, Transparency = 1, Size = Vector3.new(1, 1, 1),
-		}, ctx.worldFolder)
-		local accents = {}
-		for i = 1, 2 do
-			local a0 = Snapshot.create("Attachment", { Name = "GA0_" .. i }, rig)
-			local a1 = Snapshot.create("Attachment", { Name = "GA1_" .. i }, rig)
-			local beam = Snapshot.create("Beam", {
-				Name = "GodRayAccent_" .. i, Attachment0 = a0, Attachment1 = a1,
-				Color = ColorSequence.new(Color3.fromRGB(255, 246, 220)),
-				Transparency = ACCENT_TRANSP, LightEmission = 1, LightInfluence = 0,
-				FaceCamera = true, Width0 = 1.5, Width1 = 4, Segments = 5, Enabled = false,
-			}, rig)
-			accents[i] = { a0 = a0, a1 = a1, beam = beam, side = (i == 1) and 1 or -1 }
-		end
 
 		local accum = 0
 		maid:give(ctx.services.RunService.Heartbeat:Connect(function(dt)
 			accum += dt
-			if accum < 0.08 then return end
+			if accum < 0.1 then return end
 			accum = 0
 
 			local sunrays = ctx.bus.pipeline and ctx.bus.pipeline.sunrays
-			local cam = ctx.camera()
+			if not sunrays then return end
+
 			local on = State.get("enh_enabled") and State.get("enh_godrays")
-			local sunDir = L:GetSunDirection()           -- unit vector toward the sun
-			local daytime = math.clamp(sunDir.Y * 6, 0, 1) -- fade near horizon/night
+			local cam = ctx.camera()
+			local sunDir = L:GetSunDirection()             -- unit vector toward the sun
+			local daytime = math.clamp(sunDir.Y * 6, 0, 1)  -- fade near horizon / night
 			local facing = 0
 			if cam then
 				facing = math.clamp(cam.CFrame.LookVector:Dot(sunDir), 0, 1) -- 1 = staring at sun
 			end
 			local strength = State.get("enh_godray_strength")
 
-			-- DRIVE THE REAL ENGINE EFFECT (the good rays).
-			if sunrays then
-				local target = on and (strength * 0.45 * daytime * (0.35 + 0.65 * facing)) or 0
-				Snapshot.set(sunrays, "Intensity", Util.clamp(target * (Beams._q or 1), 0, 0.5))
-				Snapshot.set(sunrays, "Spread", 0.9)
-			end
-
-			-- whisper-thin accent shafts, ONLY when looking almost into the sun.
-			local accentOn = on and daytime > 0.2 and facing > 0.55 and strength > 0.01
-			if cam and accentOn then
-				local base = cam.CFrame.Position + sunDir * 80
-				for _, s in ipairs(accents) do
-					s.beam.Enabled = true
-					local lateral = cam.CFrame.RightVector * (s.side * 5)
-					s.a0.WorldPosition = base + lateral + sunDir * 40
-					s.a1.WorldPosition = base + lateral - cam.CFrame.LookVector * 30
-					s.beam.Width0 = 1 + strength * 1.5
-					s.beam.Width1 = 3 + strength * 4
-				end
-			else
-				for _, s in ipairs(accents) do s.beam.Enabled = false end
-			end
+			-- Subtle, sun-anchored. No camera-following geometry.
+			local target = on and (strength * 0.32 * daytime * (0.25 + 0.75 * facing)) or 0
+			Snapshot.set(sunrays, "Intensity", Util.clamp(target * (Beams._q or 1), 0, 0.32))
+			Snapshot.set(sunrays, "Spread", 0.85)
 		end))
 
-		ctx.log.debug("God-rays online (SunRaysEffect-driven)")
+		ctx.log.debug("God-rays online (SunRaysEffect only — no camera-following beams)")
 		return Beams
 	end
 

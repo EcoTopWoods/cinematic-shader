@@ -4,6 +4,25 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.4] — 2026-06-23
+
+### Fixed
+- **The gray wedge in the sky that "followed the camera so precisely"** was a pair
+  of camera-facing accent `Beam`s parked in front of the view (FaceCamera + camera-
+  relative placement). Deleted entirely. God-rays now use ONLY the engine's
+  sun-anchored `SunRaysEffect`, which stays on the actual sun and does not track your
+  view — and is kept subtle.
+- **Still over-bright**: Brightness 1.6→1.4, Exposure −0.15→−0.2, sun rays gentled.
+
+### Changed
+- **Crisper shadows**: `ShadowSoftness` 0.45→0.3 for a tighter, more realistic
+  penumbra under Future lighting. Added a one-time hint to set Roblox Graphics to
+  Manual/Quality 10 — shadow & reflection *resolution* is the client's graphics
+  setting and cannot be forced from a script (honest limitation).
+- **Reflections that feel real**: `EnvironmentSpecularScale` 1.0→1.3 so the sky/sun
+  genuinely reflect in glossy/wet surfaces (real Future environment reflection),
+  paired with the albedo-aware reflectance from 1.0.3.
+
 ## [1.0.3] — 2026-06-23
 
 Quality pass — ported the three techniques that made a hand-tuned reference

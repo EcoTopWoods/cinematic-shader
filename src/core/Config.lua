@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.3"
+	Config.version = "1.0.4"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -94,12 +94,12 @@ return function(_require)
 			tab = "Lighting", group = "Core", requires = "futureLighting", save = true,
 		},
 		lighting_brightness = {
-			default = 1.6, type = "number", min = 0, max = 6, step = 0.05,
+			default = 1.4, type = "number", min = 0, max = 6, step = 0.05,
 			label = "Sun Brightness", desc = "Lighting.Brightness — primary light intensity.",
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_exposure = {
-			default = -0.15, type = "number", min = -3, max = 3, step = 0.05,
+			default = -0.2, type = "number", min = -3, max = 3, step = 0.05,
 			label = "Exposure Comp.", desc = "Lighting.ExposureCompensation — overall EV. (NOT 'Exposure', that property does not exist.)",
 			tab = "Lighting", group = "Core", save = true,
 		},
@@ -118,7 +118,7 @@ return function(_require)
 			desc = "Lighting.GlobalShadows.", tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_shadow_softness = {
-			default = 0.45, type = "number", min = 0, max = 1, step = 0.05,
+			default = 0.3, type = "number", min = 0, max = 1, step = 0.05,
 			label = "Shadow Softness", desc = "Lighting.ShadowSoftness (Future only). Soft penumbra for cinematic key light.",
 			tab = "Lighting", group = "Core", requires = "shadowSoftness", save = true,
 		},
@@ -138,7 +138,7 @@ return function(_require)
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_env_specular = {
-			default = 1.0, type = "number", min = 0, max = 2, step = 0.05,
+			default = 1.3, type = "number", min = 0, max = 2, step = 0.05,
 			label = "Env. Specular", desc = "Lighting.EnvironmentSpecularScale — environment reflections strength (Future).",
 			tab = "Lighting", group = "Core", save = true,
 		},
