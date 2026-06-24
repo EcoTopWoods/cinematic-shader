@@ -35,6 +35,7 @@ return function(require)
 			reflect_enabled = true, reflect_mode = "Raycast Probe (SSR approx.)",
 			reflect_strength = 0.6, reflect_fresnel = 0.85, reflect_wetness = 0.4,
 			reflect_rays_per_frame = 96, reflect_accum_frames = 10, reflect_glass_overlay = false,
+			reflect_mirror = true,  -- the hero-floor showpiece mirror (Ultra = strong PC)
 			cam_dof_enabled = true, cam_dof_aperture = 22,
 			enh_enabled = true, enh_godrays = true, enh_godray_strength = 0.3, enh_dust = true,
 			enh_light_shadows = true, enh_light_beams = true,

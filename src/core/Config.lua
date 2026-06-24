@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.4"
+	Config.version = "1.0.5"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -329,8 +329,8 @@ return function(_require)
 			tab = "Reflections", group = "Probes (SSR approximation)", requires = "editableImage", save = true,
 		},
 		reflect_mirror = {
-			default = false, type = "boolean", label = "Hero Floor Mirror (heavy)",
-			desc = "Optional ViewportFrame planar mirror on one hero floor. EXPENSIVE — re-renders a cloned subset of the scene. OFF by default; only enable on a strong PC. Was an auto-on stutter source in busy places.",
+			default = false, type = "boolean", label = "Hero Floor Mirror (showpiece, heavy)",
+			desc = "Real planar mirror on the floor UNDER you (re-picks as you walk). Reflects nearby scenery AND your own character, synced every frame — you see yourself, animation and all. Mirror strength blends with wetness. EXPENSIVE (renders a 2nd camera) — strong-PC opt-in; it cannot reflect distant dynamic objects (engine limit).",
 			tab = "Reflections", group = "Probes (SSR approximation)", save = true,
 		},
 

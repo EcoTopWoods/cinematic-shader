@@ -4,6 +4,25 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.5] — 2026-06-23
+
+### Added — Hero Floor Mirror is now a real showpiece (opt-in)
+The `reflect_mirror` toggle (Reflections tab) was rebuilt from a static-subset gimmick
+into a proper planar mirror:
+- **Auto-picks the floor directly under you** (raycast down) and re-homes onto a new
+  floor as you walk (with a 1.5 s cooldown so crossing many small parts can't thrash).
+- **Reflects you.** The local character is cloned into the mirror and its part CFrames
+  are synced every frame — you see yourself, animation and all.
+- **Reflects nearby scenery** via a cheap `GetPartBoundsInBox` region query (capped 55,
+  refreshed every 4 s), never `GetDescendants` — no tree-walk hitch.
+- **Correct planar reflection** of the camera (position *and* orientation across the
+  floor plane), viewport sun synced to the scene, and mirror strength that **blends
+  with wetness** so it reads as a wet sheen rather than chrome.
+- Enabled by the **Ultra** preset; still off by default (renders a 2nd camera — heavy).
+
+Honest limit: it reflects the cloned subset + you, not distant dynamic objects — Roblox
+has no render-to-texture of the live scene, so a fully-universal mirror is impossible.
+
 ## [1.0.4] — 2026-06-23
 
 ### Fixed
