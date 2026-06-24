@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.2"
+	Config.version = "1.0.3"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -133,7 +133,7 @@ return function(_require)
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_env_diffuse = {
-			default = 0.9, type = "number", min = 0, max = 2, step = 0.05,
+			default = 0.8, type = "number", min = 0, max = 2, step = 0.05,
 			label = "Env. Diffuse (GI feel)", desc = "Lighting.EnvironmentDiffuseScale — fakes bounced diffuse GI.",
 			tab = "Lighting", group = "Core", save = true,
 		},
@@ -224,7 +224,7 @@ return function(_require)
 			tab = "Lighting", group = "Bloom", save = true,
 		},
 		bloom_threshold = {
-			default = 1.1, type = "number", min = 0, max = 5, step = 0.05,
+			default = 1.2, type = "number", min = 0, max = 5, step = 0.05,
 			label = "Bloom Threshold", desc = "Base threshold; eye-adaptation offsets this live.",
 			tab = "Lighting", group = "Bloom", save = true,
 		},
@@ -509,6 +509,16 @@ return function(_require)
 			label = "God Ray Strength", desc = "Beam transparency/scale for light shafts.",
 			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
 		},
+		enh_light_shadows = {
+			default = true, type = "boolean", label = "Light Shadows",
+			desc = "Enable real shadow casting on existing PointLights/SpotLights (defaults to off in most games). The single biggest indoor/night upgrade — capped to nearby lights for perf.",
+			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
+		},
+		enh_light_beams = {
+			default = true, type = "boolean", label = "Street Light Beams (night)",
+			desc = "Volumetric light cones from each PointLight/SpotLight, visible only at night — the developed-night-city look. Coverage-capped, near-camera only.",
+			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
+		},
 
 		-- ════════════════════════ CAMERA & CINEMATIC ═══════════════════════
 		cam_enabled = {
@@ -704,7 +714,8 @@ return function(_require)
 			"mood_preset", "mood_auto_cycle", "mood_cycle_speed" } },
 		{ tab = "Atmosphere & Weather", group = "Enhancers", keys = {
 			"enh_enabled", "enh_foliage_wind", "enh_fire", "enh_smoke", "enh_water",
-			"enh_dust", "enh_lights_repair", "enh_godrays", "enh_godray_strength" } },
+			"enh_dust", "enh_lights_repair", "enh_light_shadows", "enh_light_beams",
+			"enh_godrays", "enh_godray_strength" } },
 
 		{ tab = "Camera & Cinematic", group = "Camera", keys = {
 			"cam_enabled", "cam_fov_base", "cam_fov_kick" } },

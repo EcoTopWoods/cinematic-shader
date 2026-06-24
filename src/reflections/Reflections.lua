@@ -142,8 +142,14 @@ return function(require)
 			local fresnelTerm = Util.lerp(1, fr, State.get("reflect_fresnel"))
 			local strength = State.get("reflect_strength")
 			local wet = wetness()
+			-- ALBEDO-AWARE reflectance: a black asphalt mostly ABSORBS the sky it would
+			-- reflect — it must never read as chrome when wet. Scale by surface
+			-- brightness: true blacks ≈0.12×, mid greys near full, whites slightly
+			-- boosted. This is THE trick that makes wet streets look real instead of
+			-- silver. (Lifted from a hand-tuned reference shader.)
+			local albedo = Util.clamp(Util.luminance(part.Color) * 1.5 + 0.05, 0.12, 1.15)
 			local target = Util.clamp(
-				strength * (f0 + (1 - f0) * fresnelTerm) + wet * 0.25, 0, 1)
+				(strength * (f0 + (1 - f0) * fresnelTerm) + wet * 0.25) * albedo, 0, 1)
 			Snapshot.set(part, "Reflectance", target * Util.lerp(0.7, 1, Reflections._q or 1))
 
 			-- glass sheen overlay (lazy-created, capped) gets the probe colour

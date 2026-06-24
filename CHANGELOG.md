@@ -4,6 +4,28 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.3] — 2026-06-23
+
+Quality pass — ported the three techniques that made a hand-tuned reference
+shader read better, especially for night cities.
+
+### Added
+- **Streetlight beams (`enh_light_beams`)** — every nearby PointLight/SpotLight
+  gets a tight inner cone + soft outer halo (camera-facing Beams), visible only at
+  night (driven by the real sun direction). The developed-night-city look. Coverage-
+  capped (120 desktop / 24 mobile), built a few rigs per frame so a lit district
+  never spikes a frame, cached sequences → zero per-frame allocation.
+- **Light shadows (`enh_light_shadows`)** — turns on `Shadows` for existing lights
+  (most games ship them off). The biggest single indoor/night upgrade.
+
+### Changed
+- **Albedo-aware floor reflectance** — reflectance now scales by surface brightness
+  (true blacks ≈0.12×, whites ≈1.15×), so wet asphalt stays dark instead of turning
+  chrome/silver. This is the realism trick that makes wet streets look real.
+- Punchier defaults: `EnvironmentDiffuseScale` 0.9→0.8 (less ambient wash, more
+  contrast) and bloom threshold 1.1→1.2 (only genuinely bright things bloom).
+- **Ultra** and **Night City** presets now enable light shadows + streetlight beams.
+
 ## [1.0.2] — 2026-06-23
 
 Stability + look pass. Kills the periodic freeze, the gray planes, and the blue cast.
