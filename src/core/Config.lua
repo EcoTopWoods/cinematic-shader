@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.8"
+	Config.version = "1.0.9"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -251,7 +251,7 @@ return function(_require)
 			tab = "Lighting", group = "Creative Grade", save = true,
 		},
 		grade_saturation = {
-			default = 0.1, type = "number", min = -1, max = 1, step = 0.01,
+			default = 0.07, type = "number", min = -1, max = 1, step = 0.01,
 			label = "Saturation", desc = "Grade CCE.Saturation. Positive = punchier colour.",
 			tab = "Lighting", group = "Creative Grade", save = true,
 		},
@@ -667,7 +667,7 @@ return function(_require)
 			tab = "Performance", group = "Diagnostics", save = true,
 		},
 		perf_scanner_budget = {
-			default = 120, type = "number", min = 20, max = 600, step = 10,
+			default = 70, type = "number", min = 20, max = 600, step = 10,
 			label = "Scanner Parts/Frame", desc = "Max parts the world scanner classifies per frame (streaming-aware, debounced).",
 			tab = "Performance", group = "Diagnostics", save = true,
 		},

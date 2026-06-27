@@ -213,9 +213,13 @@ return function(require)
 		end))
 
 		-- drain loop: budgeted parts/frame
-		maid:give(RunService.Heartbeat:Connect(function()
+		maid:give(RunService.Heartbeat:Connect(function(dt)
 			if #queue == 0 then return end
 			local budget = math.max(8, math.floor(State.get("perf_scanner_budget") * qualityMul))
+			-- frame-pacing guard: if the last frame ran long (streaming a new chunk while
+			-- driving, a 360 spin loading geometry), classify FAR fewer parts this frame so
+			-- the work spreads across frames instead of stacking a stutter spike.
+			if dt and dt > 1 / 45 then budget = math.max(8, math.floor(budget * 0.35)) end
 			local processed = 0
 			while processed < budget and #queue > 0 do
 				local part = table.remove(queue)

@@ -32,7 +32,7 @@ return function(require)
 	Lights.id = "enhancers/Lights"
 
 	local RADIUS = 160          -- only service lights within this of the camera
-	local CREATE_BUDGET = 4     -- new beam rigs built per frame (spreads cost)
+	local CREATE_BUDGET = 2     -- new beam rigs built per frame (spreads cost over frames)
 
 	-- cached, set-ONCE beam transparency profiles (never rebuilt per frame).
 	local INNER_TRANSP = NumberSequence.new({
@@ -149,7 +149,11 @@ return function(require)
 
 					-- street beams: lazily build (budgeted) when near + night, toggle visibility
 					if beamsVisible and near then
-						if not info.rig and created < CREATE_BUDGET then
+						-- Build new rigs only on HEALTHY frames so sweeping past a row of
+						-- lamps (360 spin) can't stack instance-creation stutter. Existing
+						-- rigs still just toggle (cheap) — only first discovery is deferred.
+						local healthy = (ctx.bus.fps or 60) > 42
+						if not info.rig and created < CREATE_BUDGET and healthy then
 							info.rig = buildRig(light, part)
 							created += 1
 						end

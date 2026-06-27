@@ -4,6 +4,24 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.9] — 2026-06-23
+
+### Fixed — frame consistency during fast spins / driving
+The stutter wasn't sustained low FPS — it was **bursty work spiking single frames**:
+- **World scanner** classified up to 120 parts in one frame; while driving with
+  streaming on, a freshly-loaded chunk spiked a frame. Default budget lowered
+  120→70, and it now classifies far fewer parts on any frame that already ran long
+  (frame-pacing guard) so the work spreads instead of stacking.
+- **Streetlight beam rigs** were instantiated as you swept past lamps (a 360 spin
+  past a row of them stacked the cost). Creation budget halved (4→2) and new rigs
+  are only built on healthy frames — existing ones still just toggle (cheap).
+
+### Changed — more photographic
+- Grade saturation pulled back (0.1→0.07; Realistic+ 0.12→0.08) — real life is less
+  saturated than Roblox's punchy default, so this reads more natural.
+- Realistic+ reflection ray budget trimmed (80→56) for headroom; temporal
+  accumulation keeps the reflection quality.
+
 ## [1.0.8] — 2026-06-23
 
 ### Fixed — exposure no longer lurches when the camera moves
