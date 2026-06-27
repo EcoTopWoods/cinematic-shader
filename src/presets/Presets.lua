@@ -15,9 +15,32 @@ return function(require)
 	Presets._current = "Cinematic"
 
 	-- ordered list for the UI dropdown
-	Presets._order = { "Realistic+", "Ultra", "Night City", "Cinematic", "Realistic", "Vibrant", "Dreamy", "Noir", "Horror", "Potato" }
+	Presets._order = { "Realistic+", "Lite", "Ultra", "Night City", "Cinematic", "Realistic", "Vibrant", "Dreamy", "Noir", "Horror", "Potato" }
 
 	Presets._data = {
+		-- LITE — the gentlest possible touch, for when the full effect feels like "too
+		-- much". FIXED exposure (no auto-exposure shifting at all), NO god rays, NO
+		-- streetlight beams, NO motion blur / DoF / vignette / grain / dust. Just Future
+		-- lighting, tight shadows, a whisper of contrast, and cheap subtle reflections.
+		-- Enhances without ever announcing itself.
+		Lite = {
+			quality = 0.85,
+			tonemap_enabled = true, tonemap_mode = "Neutral", tonemap_contrast = 0.06,
+			lighting_future = true, lighting_brightness = 1.5, lighting_exposure = -0.05,
+			lighting_env_diffuse = 0.95, lighting_env_specular = 1.1, lighting_shadow_softness = 0.2,
+			lighting_global_shadows = true,
+			eye_adapt_enabled = false,  -- exposure never shifts; rock-steady
+			grade_enabled = true, grade_contrast = 0.06, grade_saturation = 0.03,
+			grade_tint = Color3.fromRGB(255, 253, 250),
+			bloom_enabled = true, bloom_intensity = 0.2, bloom_size = 20, bloom_threshold = 1.6,
+			atmos_enabled = true, atmos_density = 0.1, atmos_haze = 0.2, atmos_glare = 0.02,
+			reflect_enabled = true, reflect_mode = "Color Blend (cheap)", reflect_strength = 0.35,
+			reflect_glass_overlay = false, reflect_mirror = false,
+			cam_dof_enabled = false, cam_motionblur = false, cam_shake = false,
+			enh_enabled = true, enh_light_shadows = true,
+			enh_godrays = false, enh_light_beams = false, enh_dust = false, enh_foliage_wind = false,
+			overlay_vignette = false, overlay_grain = false, overlay_chromatic = false,
+		},
 		-- REALISTIC+  — the refined "best looking" grade. Deep contrast, AO-like shadow
 		-- depth (low ambient fill), tight crisp shadows, strong albedo-aware reflections,
 		-- and a SLOW, rock-stable auto-exposure so the lighting doesn't lurch when you

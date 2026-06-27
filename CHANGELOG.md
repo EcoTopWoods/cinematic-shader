@@ -4,6 +4,24 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.11] — 2026-06-23
+
+### Changed
+- **All beam effects off by default.** The sun god-rays (SunRaysEffect) and the
+  streetlight beams (camera-facing `Beam` quads that rotate to face you — read as
+  "following") are now opt-in. The default look has no beams at all.
+- **New `Lite` preset** — the gentlest touch: FIXED exposure (no auto-exposure shift),
+  no god rays / beams / motion blur / DoF / vignette / grain / dust. Just Future
+  lighting, tight shadows, a whisper of contrast, and cheap subtle reflections. For
+  when the full effect feels like too much. Second in the dropdown.
+
+### Note
+Roblox exposes NO programmable GPU shaders (no GLSL/HLSL, no compute, no custom RTX
+ray tracing) — a script physically cannot run a GPU shader or use the RTX directly.
+Every Roblox "shader," this one included, composes built-in Lighting + post-effect
+instances + overlays. An RTX card makes Roblox's OWN renderer (Future lighting,
+shadows) look great — set Graphics to Manual / Quality 10 to use it.
+
 ## [1.0.10] — 2026-06-23
 
 ### Fixed — indoor / window blow-out ("too overexposed, not buttery")

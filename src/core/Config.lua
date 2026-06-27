@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.10"
+	Config.version = "1.0.11"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -500,7 +500,7 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
 		},
 		enh_godrays = {
-			default = true, type = "boolean", label = "God Rays (Beams)",
+			default = false, type = "boolean", label = "God Rays (Beams)",
 			desc = "Volumetric light shafts faked with Beams near the sun/lights. Coverage-capped.",
 			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
 		},
@@ -515,7 +515,7 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
 		},
 		enh_light_beams = {
-			default = true, type = "boolean", label = "Street Light Beams (night)",
+			default = false, type = "boolean", label = "Street Light Beams (night)",
 			desc = "Volumetric light cones from each PointLight/SpotLight, visible only at night — the developed-night-city look. Coverage-capped, near-camera only.",
 			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
 		},
