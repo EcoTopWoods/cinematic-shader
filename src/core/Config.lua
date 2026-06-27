@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.7"
+	Config.version = "1.0.8"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -192,7 +192,7 @@ return function(_require)
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},
 		eye_adapt_speed = {
-			default = 1.2, type = "number", min = 0.1, max = 6, step = 0.1,
+			default = 2.0, type = "number", min = 0.1, max = 6, step = 0.1,
 			label = "Adaptation Time (tau)", desc = "Seconds of exponential lag. Larger = slower, more cinematic.",
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},

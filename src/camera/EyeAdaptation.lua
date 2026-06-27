@@ -40,7 +40,8 @@ return function(require)
 
 		-- seed exposure from the static config so we don't pop on first frame
 		ctx.bus.exposure = State.get("lighting_exposure")
-		local lum = 0.5
+		local lum = 0.5         -- raw per-sample luminance
+		local lumSmoothed = 0.5 -- heavily low-passed luminance the exposure actually follows
 
 		local function skyLuminance()
 			-- day factor from ClockTime: ~1 at noon, ~0 deep night.
@@ -89,18 +90,24 @@ return function(require)
 			local cam = ctx.camera()
 			if not cam then return end
 			sampleAccum += dt
-			if sampleAccum >= 0.12 then
+			if sampleAccum >= 0.1 then
 				sampleAccum = 0
 				lum = sampleLuminance(cam)
-				ctx.bus.sceneLuminance = lum
 			end
-			-- Gentle proportional response around the static exposure baseline: a scene
-			-- already near target leaves exposure ≈ lighting_exposure (we ENHANCE, we
-			-- don't fight a well-lit game); brighter → pull down, darker → lift modestly.
-			-- gain 1.4 + the tightened [min,max] clamp prevents runaway over-exposure.
-			local err = State.get("eye_adapt_target") - lum
+			-- STABILITY: low-pass the MEASURED luminance HARD (tau ~1.6s) before it can
+			-- touch exposure. This is what stops the scene brightness from lurching when
+			-- you pan the camera across a bright streetlight or the sky — the meter now
+			-- drifts toward the new average over a second-plus instead of snapping each
+			-- 0.1s sample. The exposure then eases toward that already-smooth value.
+			lumSmoothed = Util.damp(lumSmoothed, lum, 1.6, dt)
+			ctx.bus.sceneLuminance = lumSmoothed
+
+			-- Gentle proportional response around the static baseline. Low gain (0.6) so
+			-- even a real luminance shift only nudges exposure a little — natural, not a
+			-- lurch. Clamped to the configured band as a final guard.
+			local err = State.get("eye_adapt_target") - lumSmoothed
 			local base = State.get("lighting_exposure")
-			local target = Util.clamp(base + err * 1.4, State.get("eye_adapt_min"), State.get("eye_adapt_max"))
+			local target = Util.clamp(base + err * 0.6, State.get("eye_adapt_min"), State.get("eye_adapt_max"))
 			ctx.bus.exposure = Util.damp(ctx.bus.exposure, target, State.get("eye_adapt_speed"), dt)
 		end))
 

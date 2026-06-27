@@ -4,6 +4,22 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.8] — 2026-06-23
+
+### Fixed — exposure no longer lurches when the camera moves
+The auto-exposure fed its raw per-sample luminance straight in with a high gain, so
+panning the camera across a bright streetlight or the sky made the whole scene
+brightness snap. Now the MEASURED luminance is low-passed hard (tau ~1.6 s) BEFORE it
+touches exposure, the gain is cut (1.4→0.6), and the output tau is slower
+(eye_adapt_speed 1.2→2.0). Exposure now drifts gently like a real eye instead of
+lurching — stable as you look around.
+
+### Added — Realistic+ preset
+The refined "best looking" grade: deep contrast, AO-like shadow depth (low ambient
+fill), tight crisp shadows (ShadowSoftness 0.12), strong albedo-aware reflections,
+gentle bloom on true lights only, and the new rock-stable slow exposure. Foliage wind
+stays off so geometry is never touched. First in the Presets dropdown.
+
 ## [1.0.7] — 2026-06-23
 
 ### Changed — default look is now Sharp + Realistic

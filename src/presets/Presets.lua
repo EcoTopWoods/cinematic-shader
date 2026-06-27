@@ -15,9 +15,36 @@ return function(require)
 	Presets._current = "Cinematic"
 
 	-- ordered list for the UI dropdown
-	Presets._order = { "Ultra", "Night City", "Cinematic", "Realistic", "Vibrant", "Dreamy", "Noir", "Horror", "Potato" }
+	Presets._order = { "Realistic+", "Ultra", "Night City", "Cinematic", "Realistic", "Vibrant", "Dreamy", "Noir", "Horror", "Potato" }
 
 	Presets._data = {
+		-- REALISTIC+  — the refined "best looking" grade. Deep contrast, AO-like shadow
+		-- depth (low ambient fill), tight crisp shadows, strong albedo-aware reflections,
+		-- and a SLOW, rock-stable auto-exposure so the lighting doesn't lurch when you
+		-- move the camera. Grounded colour, gentle bloom on true lights only. Foliage
+		-- wind stays OFF (never deforms the world).
+		["Realistic+"] = {
+			quality = 1.0,
+			tonemap_enabled = true, tonemap_mode = "ACES", tonemap_contrast = 0.22, tonemap_white_point = 1.05,
+			lighting_future = true, lighting_brightness = 1.45, lighting_exposure = -0.18,
+			lighting_env_diffuse = 0.62, lighting_env_specular = 1.6, lighting_shadow_softness = 0.12,
+			lighting_global_shadows = true,
+			lighting_ambient = Color3.fromRGB(22, 22, 26),
+			lighting_outdoor_ambient = Color3.fromRGB(98, 100, 106),
+			eye_adapt_enabled = true, eye_adapt_target = 0.5, eye_adapt_speed = 2.6,  -- slow + stable
+			grade_enabled = true, grade_contrast = 0.16, grade_saturation = 0.12,
+			grade_tint = Color3.fromRGB(255, 250, 242),
+			bloom_enabled = true, bloom_intensity = 0.4, bloom_size = 24, bloom_threshold = 1.35,
+			bloom_exposure_couple = 0.12,
+			atmos_enabled = true, atmos_density = 0.14, atmos_haze = 0.3, atmos_glare = 0.03,
+			reflect_enabled = true, reflect_mode = "Raycast Probe (SSR approx.)",
+			reflect_strength = 0.7, reflect_fresnel = 0.85, reflect_wetness = 0.45, reflect_rays_per_frame = 80,
+			cam_dof_enabled = true, cam_dof_aperture = 14,
+			enh_enabled = true, enh_godrays = true, enh_godray_strength = 0.25,
+			enh_light_shadows = true, enh_light_beams = true, enh_dust = true, enh_foliage_wind = false,
+			overlay_vignette = true, overlay_vignette_intensity = 0.34,
+			overlay_grain = true, overlay_grain_intensity = 0.05, overlay_chromatic = false,
+		},
 		-- The "best quality" / extreme preset: rich but DELIBERATELY not blown out —
 		-- neutral-ish exposure, restrained bloom, real SunRaysEffect god-rays, the full
 		-- raycast reflection probe, soft shadows, shallow DoF. Heavy on a strong PC.
