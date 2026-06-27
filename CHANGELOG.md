@@ -4,6 +4,30 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.12] — 2026-06-23
+
+### Changed — CLARITY: sharp, not blurry/overexposed
+The "blurry / overexposed / not clear" look was depth-of-field + motion blur + bloom
+softening the image. The default is now sharp and clean:
+- **Depth of Field OFF by default** (was blurring the whole background).
+- **Motion blur OFF by default.**
+- **Bloom minimised** (0.3→0.18, threshold up) so nothing halos/washes.
+- **Less exposure / haze** (brightness 1.3, exposure −0.25, atmosphere haze 0.18,
+  density 0.12, env-specular 1.35) and **grain off** — clearer air, no overexposure.
+- Realistic+ and Cinematic presets retuned to match (DoF + beams + grain off).
+
+### Changed — UI swapped from Rayfield to Fluent
+The control panel now uses the **Fluent** library — a sleek, app-style dark UI with
+icons per tab. Same auto-generated controls (sliders/toggles/dropdowns/colour/keybind),
+same live updates, same preset / import-export / freecam / photo-mode / unload actions.
+The toggle key now **minimises** the window (Fluent style). FallbackUI still covers the
+no-HTTP case. (Dropping Rayfield's auto-save also removes the stale-saved-config issue.)
+
+### Note
+Geometry is never modified — the suite only *reads* the world (raycasts) to drive
+lighting. And Roblox still exposes no programmable GPU shaders / RTX access; set
+Roblox Graphics to Manual / Quality 10 to use your card's full output.
+
 ## [1.0.11] — 2026-06-23
 
 ### Changed

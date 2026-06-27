@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.11"
+	Config.version = "1.0.12"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -94,12 +94,12 @@ return function(_require)
 			tab = "Lighting", group = "Core", requires = "futureLighting", save = true,
 		},
 		lighting_brightness = {
-			default = 1.4, type = "number", min = 0, max = 6, step = 0.05,
+			default = 1.3, type = "number", min = 0, max = 6, step = 0.05,
 			label = "Sun Brightness", desc = "Lighting.Brightness — primary light intensity.",
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_exposure = {
-			default = -0.2, type = "number", min = -3, max = 3, step = 0.05,
+			default = -0.25, type = "number", min = -3, max = 3, step = 0.05,
 			label = "Exposure Comp.", desc = "Lighting.ExposureCompensation — overall EV. (NOT 'Exposure', that property does not exist.)",
 			tab = "Lighting", group = "Core", save = true,
 		},
@@ -138,7 +138,7 @@ return function(_require)
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_env_specular = {
-			default = 1.5, type = "number", min = 0, max = 2, step = 0.05,
+			default = 1.35, type = "number", min = 0, max = 2, step = 0.05,
 			label = "Env. Specular", desc = "Lighting.EnvironmentSpecularScale — environment reflections strength (Future).",
 			tab = "Lighting", group = "Core", save = true,
 		},
@@ -214,7 +214,7 @@ return function(_require)
 			tab = "Lighting", group = "Bloom", save = true,
 		},
 		bloom_intensity = {
-			default = 0.3, type = "number", min = 0, max = 4, step = 0.05,
+			default = 0.18, type = "number", min = 0, max = 4, step = 0.05,
 			label = "Bloom Intensity", desc = "BloomEffect.Intensity.",
 			tab = "Lighting", group = "Bloom", save = true,
 		},
@@ -341,7 +341,7 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
 		atmos_density = {
-			default = 0.15, type = "number", min = 0, max = 1, step = 0.01,
+			default = 0.12, type = "number", min = 0, max = 1, step = 0.01,
 			label = "Density", desc = "Atmosphere.Density — distance haze thickness.",
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
@@ -366,7 +366,7 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
 		atmos_haze = {
-			default = 0.35, type = "number", min = 0, max = 10, step = 0.1,
+			default = 0.18, type = "number", min = 0, max = 10, step = 0.1,
 			label = "Haze", desc = "Atmosphere.Haze.",
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
@@ -537,7 +537,7 @@ return function(_require)
 			tab = "Camera & Cinematic", group = "Camera", save = true,
 		},
 		cam_dof_enabled = {
-			default = true, type = "boolean", label = "Auto-Focus DoF",
+			default = false, type = "boolean", label = "Auto-Focus DoF",
 			desc = "DepthOfFieldEffect whose focus distance auto-tracks what the camera looks at.",
 			tab = "Camera & Cinematic", group = "Depth of Field", save = true,
 		},
@@ -552,7 +552,7 @@ return function(_require)
 			tab = "Camera & Cinematic", group = "Depth of Field", save = true,
 		},
 		cam_motionblur = {
-			default = true, type = "boolean", label = "Motion Blur (faked)",
+			default = false, type = "boolean", label = "Motion Blur (faked)",
 			desc = "Velocity smear via a GUI overlay + micro BlurEffect pulse. There is NO MotionBlurEffect in Roblox.",
 			tab = "Camera & Cinematic", group = "Motion Blur", save = true,
 		},
@@ -578,12 +578,12 @@ return function(_require)
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},
 		overlay_vignette_intensity = {
-			default = 0.32, type = "number", min = 0, max = 1, step = 0.05,
+			default = 0.18, type = "number", min = 0, max = 1, step = 0.05,
 			label = "Vignette Intensity", desc = "Overlay opacity.",
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},
 		overlay_grain = {
-			default = true, type = "boolean", label = "Film Grain (overlay)",
+			default = false, type = "boolean", label = "Film Grain (overlay)",
 			desc = "Animated grain via tiled overlay / EditableImage noise.",
 			tab = "Camera & Cinematic", group = "Cinematic Overlays (faked)", save = true,
 		},

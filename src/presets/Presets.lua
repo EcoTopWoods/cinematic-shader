@@ -57,16 +57,16 @@ return function(require)
 			eye_adapt_enabled = true, eye_adapt_target = 0.5, eye_adapt_speed = 2.6,  -- slow + stable
 			grade_enabled = true, grade_contrast = 0.16, grade_saturation = 0.08,
 			grade_tint = Color3.fromRGB(255, 250, 242),
-			bloom_enabled = true, bloom_intensity = 0.3, bloom_size = 24, bloom_threshold = 1.55,
+			bloom_enabled = true, bloom_intensity = 0.2, bloom_size = 22, bloom_threshold = 1.6,
 			bloom_exposure_couple = 0.1,
-			atmos_enabled = true, atmos_density = 0.14, atmos_haze = 0.3, atmos_glare = 0.03,
+			atmos_enabled = true, atmos_density = 0.12, atmos_haze = 0.18, atmos_glare = 0.02,
 			reflect_enabled = true, reflect_mode = "Raycast Probe (SSR approx.)",
 			reflect_strength = 0.7, reflect_fresnel = 0.85, reflect_wetness = 0.45, reflect_rays_per_frame = 56,
-			cam_dof_enabled = true, cam_dof_aperture = 14,
-			enh_enabled = true, enh_godrays = true, enh_godray_strength = 0.25,
-			enh_light_shadows = true, enh_light_beams = true, enh_dust = true, enh_foliage_wind = false,
-			overlay_vignette = true, overlay_vignette_intensity = 0.34,
-			overlay_grain = true, overlay_grain_intensity = 0.05, overlay_chromatic = false,
+			cam_dof_enabled = false, cam_motionblur = false,   -- CLARITY: no background/movement blur
+			enh_enabled = true, enh_godrays = false, enh_light_shadows = true,
+			enh_light_beams = false, enh_dust = false, enh_foliage_wind = false,
+			overlay_vignette = true, overlay_vignette_intensity = 0.18,
+			overlay_grain = false, overlay_chromatic = false,
 		},
 		-- The "best quality" / extreme preset: rich but DELIBERATELY not blown out —
 		-- neutral-ish exposure, restrained bloom, real SunRaysEffect god-rays, the full
@@ -102,13 +102,13 @@ return function(require)
 			eye_adapt_enabled = true, eye_adapt_target = 0.5,
 			grade_enabled = true, grade_contrast = 0.14, grade_saturation = 0.1,
 			grade_tint = Color3.fromRGB(255, 248, 238),
-			bloom_enabled = true, bloom_intensity = 0.3, bloom_size = 26, bloom_threshold = 1.5,
-			atmos_enabled = true, atmos_density = 0.15, atmos_haze = 0.35, atmos_glare = 0.04,
-			overlay_vignette = true, overlay_vignette_intensity = 0.3,
-			overlay_grain = true, overlay_grain_intensity = 0.06,
-			cam_dof_enabled = true, cam_dof_aperture = 16,
+			bloom_enabled = true, bloom_intensity = 0.18, bloom_size = 24, bloom_threshold = 1.6,
+			atmos_enabled = true, atmos_density = 0.12, atmos_haze = 0.18, atmos_glare = 0.03,
+			overlay_vignette = true, overlay_vignette_intensity = 0.18,
+			overlay_grain = false,
+			cam_dof_enabled = false, cam_motionblur = false,   -- CLARITY: sharp, no blur
 			reflect_enabled = true, reflect_strength = 0.65, reflect_fresnel = 0.8,
-			enh_godrays = true, enh_godray_strength = 0.28,
+			enh_godrays = false, enh_light_beams = false,
 		},
 		-- GTA-style developed night city: deep contrast, controlled exposure, warm
 		-- sodium key vs cool city bounce (a TASTEFUL teal-orange split — not the flat

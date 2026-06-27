@@ -2,14 +2,14 @@
 --[[
 	ui/Controls.lua  —  pure module
 	-----------------------------------------------------------------------------
-	Maps one Config metadata entry to the matching Rayfield control. Every control's
-	Callback is wired to onChanged(value) (which the Schema points at State.set), and
-	meta.save adds a Flag so Rayfield ConfigurationSaving persists it. Returns the
-	created control object (which exposes :Set for State→UI sync) or nil.
+	Maps one Config metadata entry to the matching FLUENT control. Every control's
+	Callback is wired to onChanged(value) (the Schema points it at State.set), and the
+	created control object is returned so State→UI sync (preset/import refresh) can push
+	values back via :SetValue / :SetValueRGB.
 
-	Only REAL Rayfield creators are used: CreateSlider/CreateToggle/CreateDropdown/
-	CreateColorPicker/CreateKeybind/CreateInput. Each is pcall-guarded because the
-	remote library's exact signature can drift between versions.
+	Fluent control creators take an idx (flag) as the first argument — we use the config
+	key (unique) so Fluent's global Options/Toggles tables stay tidy. Each call is
+	pcall-guarded because the remote library's signature can drift between versions.
 ]]
 
 return function(require)
@@ -17,63 +17,55 @@ return function(require)
 
 	local Controls = {}
 
-	-- Rayfield dropdowns (newer) pass the selection as a table; normalise.
-	local function pickOption(o)
-		if type(o) == "table" then return o[1] end
-		return o
+	-- decimals of precision Fluent should round a slider to, derived from the step.
+	local function rounding(step)
+		step = step or 0.01
+		if step >= 1 then return 0
+		elseif step >= 0.1 then return 1
+		else return 2 end
 	end
 
 	function Controls.create(tab, key, meta, onChanged)
-		local flag = meta.save and key or nil
+		local title = meta.label or key
+		local desc = meta.desc
 		local ok, control = pcall(function()
 			if meta.type == "number" then
-				return tab:CreateSlider({
-					Name = meta.label or key,
-					Range = { meta.min or 0, meta.max or 1 },
-					Increment = meta.step or 0.01,
-					Suffix = "",
-					CurrentValue = State.get(key),
-					Flag = flag,
+				return tab:AddSlider(key, {
+					Title = title, Description = desc,
+					Default = State.get(key), Min = meta.min or 0, Max = meta.max or 1,
+					Rounding = rounding(meta.step),
 					Callback = function(v) onChanged(v) end,
 				})
 			elseif meta.type == "boolean" then
-				return tab:CreateToggle({
-					Name = meta.label or key,
-					CurrentValue = State.get(key) and true or false,
-					Flag = flag,
+				return tab:AddToggle(key, {
+					Title = title, Description = desc,
+					Default = State.get(key) and true or false,
 					Callback = function(v) onChanged(v and true or false) end,
 				})
 			elseif meta.type == "option" then
-				return tab:CreateDropdown({
-					Name = meta.label or key,
-					Options = meta.options or {},
-					CurrentOption = { State.get(key) },
-					MultipleOptions = false,
-					Flag = flag,
-					Callback = function(o) onChanged(pickOption(o)) end,
+				return tab:AddDropdown(key, {
+					Title = title, Description = desc,
+					Values = meta.options or {}, Multi = false, Default = State.get(key),
+					Callback = function(v)
+						if type(v) == "table" then v = next(v) or v[1] end
+						onChanged(v)
+					end,
 				})
 			elseif meta.type == "color" then
-				return tab:CreateColorPicker({
-					Name = meta.label or key,
-					Color = State.get(key),
-					Flag = flag,
+				return tab:AddColorpicker(key, {
+					Title = title, Default = State.get(key),
 					Callback = function(c) onChanged(c) end,
 				})
 			elseif meta.type == "keybind" then
-				return tab:CreateKeybind({
-					Name = meta.label or key,
-					CurrentKeybind = tostring(State.get(key)),
-					HoldToInteract = false,
-					Flag = flag,
-					Callback = function(k) onChanged(k) end,
+				return tab:AddKeybind(key, {
+					Title = title, Mode = "Toggle", Default = tostring(State.get(key)),
+					Callback = function() end,
+					ChangedCallback = function(newKey) onChanged(newKey) end,
 				})
 			else -- string / freeform
-				return tab:CreateInput({
-					Name = meta.label or key,
-					CurrentValue = tostring(State.get(key)),
-					PlaceholderText = meta.desc or "",
-					RemoveTextAfterFocusLost = false,
-					Flag = flag,
+				return tab:AddInput(key, {
+					Title = title, Default = tostring(State.get(key)),
+					Placeholder = desc or "", Finished = true,
 					Callback = function(t) onChanged(t) end,
 				})
 			end
@@ -87,12 +79,12 @@ return function(require)
 
 	-- push a value from State back into a control (preset/import refresh).
 	function Controls.setValue(control, meta, value)
-		if not control or type(control.Set) ~= "function" then return end
+		if not control then return end
 		pcall(function()
-			if meta.type == "option" then
-				control:Set({ value })
-			else
-				control:Set(value)
+			if meta.type == "color" and type(control.SetValueRGB) == "function" then
+				control:SetValueRGB(value)
+			elseif type(control.SetValue) == "function" then
+				control:SetValue(value)
 			end
 		end)
 	end
