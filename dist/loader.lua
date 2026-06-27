@@ -2,7 +2,7 @@
 	dist/loader.lua  —  NETWORK LOADER (the only file users paste)
 	=============================================================================
 	    loadstring(game:HttpGet(
-	      "https://raw.githubusercontent.com/EcoTopWoods/cinematic-shader/v1.0.12/dist/loader.lua"
+	      "https://raw.githubusercontent.com/EcoTopWoods/cinematic-shader/v1.0.13/dist/loader.lua"
 	    ))()
 	=============================================================================
 	DESIGN: fetch the SINGLE pre-built bundle (dist/cinematic.lua) in ONE request,
@@ -21,8 +21,8 @@
 -- ⚠ EDIT THESE for your fork (must match manifest.repo).
 local USER = "EcoTopWoods"
 local REPO = "cinematic-shader"
-local REF  = "v1.0.12"          -- a TAG or commit SHA (use "main" for always-latest)
-local VERSION = "1.0.12"
+local REF  = "v1.0.13"          -- a TAG or commit SHA (use "main" for always-latest)
+local VERSION = "1.0.13"
 local BUNDLE = "dist/cinematic.lua"
 
 -- ── capability probes ────────────────────────────────────────────────────────
@@ -53,10 +53,13 @@ if not httpGetFn then
 end
 
 -- ── url mirrors for the bundle ───────────────────────────────────────────────
+-- statically is placed second (ahead of jsDelivr) because it serves new tags
+-- immediately and tends to stay reachable where raw.githubusercontent is region-
+-- blocked; jsDelivr can 502 on a just-pushed tag until it caches.
 local MIRRORS = {
 	("https://raw.githubusercontent.com/%s/%s/%s/%s"):format(USER, REPO, REF, BUNDLE),
-	("https://cdn.jsdelivr.net/gh/%s/%s@%s/%s"):format(USER, REPO, REF, BUNDLE),
 	("https://cdn.statically.io/gh/%s/%s/%s/%s"):format(USER, REPO, REF, BUNDLE),
+	("https://cdn.jsdelivr.net/gh/%s/%s@%s/%s"):format(USER, REPO, REF, BUNDLE),
 }
 
 local function looksValid(body)
@@ -84,33 +87,56 @@ local function diskWrite(data)
 	end)
 end
 
--- ── fetch the bundle (cache → mirrors × retries) ─────────────────────────────
+local function clearCache()
+	pcall(function()
+		if has(delfile) and has(isfile) and isfile(CACHE_FILE) then delfile(CACHE_FILE) end
+	end)
+end
+
+-- A body is only accepted if it actually COMPILES. This is the key robustness
+-- change: a truncated/partial fetch (or a poisoned cache) can pass a length check
+-- yet fail to run — so we loadstring it here and reject anything that won't compile,
+-- and we only ever cache validated, compilable bundles. Returns (factory, err).
+local function compileBundle(body)
+	if not looksValid(body) then return nil, "incomplete download" end
+	local f, err = loadstring(body, "@cinematic-bundle")
+	if not f then return nil, "compile: " .. tostring(err) end
+	return f
+end
+
+-- ── fetch the bundle (validated cache → mirrors × retries) ───────────────────
 local function fetchBundle()
+	-- cached copy must still COMPILE; a poisoned cache self-heals (deleted + refetched).
 	local cached = diskRead()
-	if looksValid(cached) then return cached, "cache" end
+	if cached then
+		local f = compileBundle(cached)
+		if f then return f, "disk cache" end
+		clearCache()
+	end
+	local lastErr = "no HTTP"
 	for _, url in ipairs(MIRRORS) do
 		for attempt = 1, 3 do
 			local ok, body = pcall(httpGetFn, url)
-			if ok and looksValid(body) then
-				diskWrite(body)
-				return body, url
+			if ok then
+				local f, err = compileBundle(body)
+				if f then
+					diskWrite(body) -- only cache validated, runnable bundles
+					return f, url
+				end
+				lastErr = err or "bad body"
+			else
+				lastErr = "blocked/offline"
 			end
 			task.wait(0.25 * attempt) -- linear backoff
 		end
 	end
-	return nil
+	return nil, lastErr
 end
 
-local src, source = fetchBundle()
-if not src then
-	notify("Cinematic Suite", "Failed to fetch the bundle from every mirror. Aborted (nothing applied).")
-	return
-end
-
--- ── compile + boot ───────────────────────────────────────────────────────────
-local factory, compileErr = loadstring(src, "@cinematic-bundle")
+local factory, source = fetchBundle()
 if not factory then
-	notify("Cinematic Suite", "Bundle compile error: " .. tostring(compileErr))
+	notify("Cinematic Suite", "Couldn't load (" .. tostring(source) .. "). If raw.githubusercontent is "
+		.. "blocked on your network, try the jsDelivr/statically URL from the README.")
 	return
 end
 

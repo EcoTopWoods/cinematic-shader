@@ -4,6 +4,20 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.13] — 2026-06-23
+
+### Fixed — loader robustness ("loader doesn't work")
+The bundle was verified valid + live; the failure was on the fetch side. The loader is
+now self-healing:
+- **Compile-before-cache.** A truncated download (or a previously poisoned cache) could
+  pass a length check yet fail to run. The loader now `loadstring`s every body and
+  rejects anything that won't compile — and only ever writes validated, runnable
+  bundles to the disk cache. A bad cache is deleted and re-fetched automatically.
+- **Mirror order:** statically (immediate on new tags, reachable where raw is region-
+  blocked) is now tried before jsDelivr (which can 502 on a just-pushed tag).
+- Clearer failure notification (tells you if raw appears blocked on your network).
+- The new version uses a fresh cache key, so a poisoned v1.0.12 cache is sidestepped.
+
 ## [1.0.12] — 2026-06-23
 
 ### Changed — CLARITY: sharp, not blurry/overexposed

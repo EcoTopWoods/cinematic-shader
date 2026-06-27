@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.12"
+	Config.version = "1.0.13"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
