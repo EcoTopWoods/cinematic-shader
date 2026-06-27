@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.6"
+	Config.version = "1.0.7"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -118,7 +118,7 @@ return function(_require)
 			desc = "Lighting.GlobalShadows.", tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_shadow_softness = {
-			default = 0.3, type = "number", min = 0, max = 1, step = 0.05,
+			default = 0.15, type = "number", min = 0, max = 1, step = 0.05,
 			label = "Shadow Softness", desc = "Lighting.ShadowSoftness (Future only). Soft penumbra for cinematic key light.",
 			tab = "Lighting", group = "Core", requires = "shadowSoftness", save = true,
 		},
@@ -133,12 +133,12 @@ return function(_require)
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_env_diffuse = {
-			default = 0.8, type = "number", min = 0, max = 2, step = 0.05,
+			default = 0.7, type = "number", min = 0, max = 2, step = 0.05,
 			label = "Env. Diffuse (GI feel)", desc = "Lighting.EnvironmentDiffuseScale — fakes bounced diffuse GI.",
 			tab = "Lighting", group = "Core", save = true,
 		},
 		lighting_env_specular = {
-			default = 1.3, type = "number", min = 0, max = 2, step = 0.05,
+			default = 1.5, type = "number", min = 0, max = 2, step = 0.05,
 			label = "Env. Specular", desc = "Lighting.EnvironmentSpecularScale — environment reflections strength (Future).",
 			tab = "Lighting", group = "Core", save = true,
 		},
@@ -165,7 +165,7 @@ return function(_require)
 			tab = "Lighting", group = "Tonemap (filmic, approx.)", save = true,
 		},
 		tonemap_contrast = {
-			default = 0.14, type = "number", min = -0.5, max = 1, step = 0.01,
+			default = 0.2, type = "number", min = -0.5, max = 1, step = 0.01,
 			label = "Filmic Contrast", desc = "Toe/shoulder contrast of the tonemap CCE.",
 			tab = "Lighting", group = "Tonemap (filmic, approx.)", save = true,
 		},
@@ -214,7 +214,7 @@ return function(_require)
 			tab = "Lighting", group = "Bloom", save = true,
 		},
 		bloom_intensity = {
-			default = 0.5, type = "number", min = 0, max = 4, step = 0.05,
+			default = 0.45, type = "number", min = 0, max = 4, step = 0.05,
 			label = "Bloom Intensity", desc = "BloomEffect.Intensity.",
 			tab = "Lighting", group = "Bloom", save = true,
 		},
@@ -246,12 +246,12 @@ return function(_require)
 			tab = "Lighting", group = "Creative Grade", save = true,
 		},
 		grade_contrast = {
-			default = 0.08, type = "number", min = -0.5, max = 0.8, step = 0.01,
+			default = 0.14, type = "number", min = -0.5, max = 0.8, step = 0.01,
 			label = "Contrast", desc = "Grade CCE.Contrast.",
 			tab = "Lighting", group = "Creative Grade", save = true,
 		},
 		grade_saturation = {
-			default = 0.12, type = "number", min = -1, max = 1, step = 0.01,
+			default = 0.1, type = "number", min = -1, max = 1, step = 0.01,
 			label = "Saturation", desc = "Grade CCE.Saturation. Positive = punchier colour.",
 			tab = "Lighting", group = "Creative Grade", save = true,
 		},
@@ -268,7 +268,7 @@ return function(_require)
 			tab = "Reflections", group = "Floors", save = true,
 		},
 		reflect_strength = {
-			default = 0.55, type = "number", min = 0, max = 1, step = 0.05,
+			default = 0.65, type = "number", min = 0, max = 1, step = 0.05,
 			label = "Reflectance Strength", desc = "Target Reflectance applied to classified floors (modulated by Fresnel).",
 			tab = "Reflections", group = "Floors", save = true,
 		},
@@ -278,7 +278,7 @@ return function(_require)
 			tab = "Reflections", group = "Floors", save = true,
 		},
 		reflect_fresnel = {
-			default = 0.7, type = "number", min = 0, max = 1, step = 0.05,
+			default = 0.8, type = "number", min = 0, max = 1, step = 0.05,
 			label = "Fresnel Power", desc = "Schlick-Fresnel from camLook·normal — stronger reflections at grazing angles.",
 			tab = "Reflections", group = "Floors", save = true,
 		},
@@ -341,7 +341,7 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
 		atmos_density = {
-			default = 0.18, type = "number", min = 0, max = 1, step = 0.01,
+			default = 0.15, type = "number", min = 0, max = 1, step = 0.01,
 			label = "Density", desc = "Atmosphere.Density — distance haze thickness.",
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
@@ -366,7 +366,7 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
 		atmos_haze = {
-			default = 0.5, type = "number", min = 0, max = 10, step = 0.1,
+			default = 0.35, type = "number", min = 0, max = 10, step = 0.1,
 			label = "Haze", desc = "Atmosphere.Haze.",
 			tab = "Atmosphere & Weather", group = "Atmosphere", save = true,
 		},
@@ -630,7 +630,7 @@ return function(_require)
 			tab = "Materials", group = "PBR", save = true,
 		},
 		pbr_reflectance_bias = {
-			default = 0.0, type = "number", min = 0, max = 0.6, step = 0.01,
+			default = 0.03, type = "number", min = 0, max = 0.6, step = 0.01,
 			label = "Global Reflectance Bias", desc = "Add baseline Reflectance to metallic/smooth materials.",
 			tab = "Materials", group = "PBR", save = true,
 		},

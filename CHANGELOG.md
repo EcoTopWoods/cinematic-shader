@@ -4,6 +4,20 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.7] — 2026-06-23
+
+### Changed — default look is now Sharp + Realistic
+Retuned the default grade (and the matching Cinematic preset) toward deeper contrast,
+tighter shadows, and stronger reflections — grounded, not oversaturated:
+- **Contrast:** tonemap 0.14→0.2, grade 0.08→0.14, `EnvironmentDiffuseScale` 0.8→0.7
+  (less ambient fill → deeper, punchier shadows).
+- **Shadows:** `ShadowSoftness` 0.3→0.15 for tight, crisp shadow edges (Future).
+- **Reflections:** `EnvironmentSpecularScale` 1.3→1.5, floor reflectance 0.55→0.65,
+  Fresnel 0.7→0.8, global reflectance bias 0→0.03 — stronger, still albedo-aware so
+  dark surfaces stay dark.
+- **Sharper air:** atmosphere density 0.18→0.15, haze 0.5→0.35, bloom 0.5→0.45 (only
+  genuinely bright highlights bloom). Grain 0.06.
+
 ## [1.0.6] — 2026-06-23
 
 ### Fixed — CRITICAL: world geometry was being deformed
