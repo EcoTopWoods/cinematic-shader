@@ -102,13 +102,18 @@ return function(require)
 			lumSmoothed = Util.damp(lumSmoothed, lum, 1.6, dt)
 			ctx.bus.sceneLuminance = lumSmoothed
 
-			-- Gentle proportional response around the static baseline. Low gain (0.6) so
-			-- even a real luminance shift only nudges exposure a little — natural, not a
-			-- lurch. Clamped to the configured band as a final guard.
+			-- ASYMMETRIC response, like a real eye. When the scene is too BRIGHT
+			-- (err < 0 — a sunlit window, a white room) pull exposure DOWN harder and
+			-- FASTER so highlights don't blow out (you squint). When too dark, lift
+			-- gently and slowly. lumSmoothed already removes the per-frame jitter, so
+			-- this stays smooth — no lurch, just a natural brightness settle.
 			local err = State.get("eye_adapt_target") - lumSmoothed
 			local base = State.get("lighting_exposure")
-			local target = Util.clamp(base + err * 0.6, State.get("eye_adapt_min"), State.get("eye_adapt_max"))
-			ctx.bus.exposure = Util.damp(ctx.bus.exposure, target, State.get("eye_adapt_speed"), dt)
+			local gain = (err < 0) and 1.1 or 0.5
+			local target = Util.clamp(base + err * gain, State.get("eye_adapt_min"), State.get("eye_adapt_max"))
+			local spd = State.get("eye_adapt_speed")
+			local tau = (target < ctx.bus.exposure) and (spd * 0.5) or spd  -- darken faster than we brighten
+			ctx.bus.exposure = Util.damp(ctx.bus.exposure, target, tau, dt)
 		end))
 
 		ctx.log.debug("EyeAdaptation online")

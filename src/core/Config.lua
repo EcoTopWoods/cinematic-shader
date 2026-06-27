@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.9"
+	Config.version = "1.0.10"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -202,7 +202,7 @@ return function(_require)
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},
 		eye_adapt_max = {
-			default = 0.5, type = "number", min = 0, max = 3, step = 0.05,
+			default = 0.3, type = "number", min = 0, max = 3, step = 0.05,
 			label = "Max Exposure", desc = "Upper clamp on auto exposure (dark scenes).",
 			tab = "Lighting", group = "Eye Adaptation", save = true,
 		},
@@ -214,7 +214,7 @@ return function(_require)
 			tab = "Lighting", group = "Bloom", save = true,
 		},
 		bloom_intensity = {
-			default = 0.45, type = "number", min = 0, max = 4, step = 0.05,
+			default = 0.3, type = "number", min = 0, max = 4, step = 0.05,
 			label = "Bloom Intensity", desc = "BloomEffect.Intensity.",
 			tab = "Lighting", group = "Bloom", save = true,
 		},
@@ -224,12 +224,12 @@ return function(_require)
 			tab = "Lighting", group = "Bloom", save = true,
 		},
 		bloom_threshold = {
-			default = 1.2, type = "number", min = 0, max = 5, step = 0.05,
+			default = 1.5, type = "number", min = 0, max = 5, step = 0.05,
 			label = "Bloom Threshold", desc = "Base threshold; eye-adaptation offsets this live.",
 			tab = "Lighting", group = "Bloom", save = true,
 		},
 		bloom_exposure_couple = {
-			default = 0.2, type = "number", min = 0, max = 1.5, step = 0.05,
+			default = 0.1, type = "number", min = 0, max = 1.5, step = 0.05,
 			label = "Exposure Coupling", desc = "How strongly auto-exposure modulates the bloom threshold.",
 			tab = "Lighting", group = "Bloom", save = true,
 		},

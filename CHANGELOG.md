@@ -4,6 +4,19 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.10] — 2026-06-23
+
+### Fixed — indoor / window blow-out ("too overexposed, not buttery")
+High-dynamic-range indoor scenes (a sunlit window, white walls) were flooding to
+white with hard clipping. Two changes:
+- **Auto-exposure is now asymmetric, like a real eye:** when the scene is too BRIGHT
+  it pulls exposure down *harder and faster* (gain 1.1, half the time-constant) so
+  highlights stop blowing out; when too dark it lifts gently. Still fed by the
+  heavily-smoothed luminance, so no lurch. Max brightening cap lowered (0.5→0.3).
+- **Bloom tamed so only genuinely bright things glow:** intensity 0.45→0.3, threshold
+  1.2→1.5, exposure-coupling 0.2→0.1. Daylit white walls no longer flood-bloom; neon
+  and the sun still do. Realistic+ and Cinematic presets aligned.
+
 ## [1.0.9] — 2026-06-23
 
 ### Fixed — frame consistency during fast spins / driving
