@@ -2,7 +2,7 @@
 	dist/loader.lua  —  NETWORK LOADER (the only file users paste)
 	=============================================================================
 	    loadstring(game:HttpGet(
-	      "https://raw.githubusercontent.com/EcoTopWoods/cinematic-shader/v1.0.5/dist/loader.lua"
+	      "https://raw.githubusercontent.com/EcoTopWoods/cinematic-shader/v1.0.6/dist/loader.lua"
 	    ))()
 	=============================================================================
 	DESIGN: fetch the SINGLE pre-built bundle (dist/cinematic.lua) in ONE request,
@@ -21,8 +21,8 @@
 -- ⚠ EDIT THESE for your fork (must match manifest.repo).
 local USER = "EcoTopWoods"
 local REPO = "cinematic-shader"
-local REF  = "v1.0.5"          -- a TAG or commit SHA (use "main" for always-latest)
-local VERSION = "1.0.5"
+local REF  = "v1.0.6"          -- a TAG or commit SHA (use "main" for always-latest)
+local VERSION = "1.0.6"
 local BUNDLE = "dist/cinematic.lua"
 
 -- ── capability probes ────────────────────────────────────────────────────────

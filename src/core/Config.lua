@@ -40,7 +40,7 @@
 return function(_require)
 	local Config = {}
 
-	Config.version = "1.0.5"
+	Config.version = "1.0.6"
 	Config.schemaVersion = 1
 
 	Config.tabs = {
@@ -470,7 +470,7 @@ return function(_require)
 			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
 		},
 		enh_foliage_wind = {
-			default = true, type = "boolean", label = "Foliage Wind",
+			default = false, type = "boolean", label = "Foliage Wind",
 			desc = "Sway flagged foliage with noise-driven wind.",
 			tab = "Atmosphere & Weather", group = "Enhancers", save = true,
 		},

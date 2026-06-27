@@ -21,14 +21,14 @@
 return function(_require)
 	local manifest = {}
 
-	manifest.version = "1.0.5"
+	manifest.version = "1.0.6"
 	manifest.schemaVersion = 1
 
 	-- ⚠ EDIT FOR YOUR FORK: the loader pins network fetches to <user>/<name>@<ref>.
 	manifest.repo = {
 		user = "EcoTopWoods",
 		name = "cinematic-shader",
-		ref = "v1.0.5", -- a TAG or commit SHA — never a moving branch in production
+		ref = "v1.0.6", -- a TAG or commit SHA — never a moving branch in production
 		srcDir = "src",
 	}
 

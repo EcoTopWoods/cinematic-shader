@@ -4,6 +4,25 @@ All notable changes to the Cinematic Graphics Suite are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.6] — 2026-06-23
+
+### Fixed — CRITICAL: world geometry was being deformed
+The foliage wind-sway (`enhancers/Foliage`) rotated game parts via `CFrame` every
+frame. Because the Scanner tags anything Grass-material or named "tree/plant/grass"
+as foliage, **collidable road / ground / building parts got caught and rotated** —
+turning flat floors into potholes/ramps (you couldn't walk or drive), displacing
+structures, and making parts look "gone." The suite must NEVER move world geometry.
+Now foliage sway:
+- only ever touches a part that is **NOT CanCollide** (pure decoration — collision
+  geometry is never moved) **and** small (≤10 studs — structures are never small),
+- restores every part to its captured original CFrame the instant you toggle it off,
+  and on unload (via Snapshot),
+- is **off by default** (you opt in). An audit confirmed no other module moves,
+  resizes, destroys, or reparents any game part — Foliage was the only offender.
+
+If a world is already deformed from an earlier version: **rejoin** (or unload the
+suite) to restore originals, then load v1.0.6.
+
 ## [1.0.5] — 2026-06-23
 
 ### Added — Hero Floor Mirror is now a real showpiece (opt-in)
